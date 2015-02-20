@@ -65,6 +65,10 @@ var mockito4js = (function mockito4js() {
     mockito4js.never = function () {
         return new Exactly(0);
     };
+	
+	mockito4js.once = function () {
+        return new Exactly(1);
+    };
 
     mockito4js.atLeast = function (numberOfTimes) {
         return new AtLeast(numberOfTimes);
