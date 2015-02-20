@@ -2,7 +2,7 @@
  *
  * @source: https://github.com/mikedeswert/mockito4js
  *
- * @licstart  The following is the entire license notice for the 
+ * @licstart  The following is the entire license notice for the
  *  JavaScript code in this page.
  *
  * Copyright (C) 2015  Mike De Swert
@@ -27,17 +27,17 @@
  * The MIT License
  *
  * Copyright (c) 2007 Mockito contributors
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -118,6 +118,10 @@ var mockito4js = (function mockito4js() {
         return new Exactly(0);
     };
 
+    mockito4js.once = function () {
+        return new Exactly(1);
+    };
+
     mockito4js.atLeast = function (numberOfTimes) {
         return new AtLeast(numberOfTimes);
     };
@@ -126,32 +130,32 @@ var mockito4js = (function mockito4js() {
         return new AtMost(numberOfTimes);
     };
 
-    var Verification = function(invocationCount) {
+    var Verification = function (invocationCount) {
         this.invocationCount = invocationCount;
 
-        this.numberOfInvocationsNotCorrect = function(actualInvocationCount) {
+        this.numberOfInvocationsNotCorrect = function (actualInvocationCount) {
             return actualInvocationCount != this.invocationCount
         };
     };
 
-    Verification.prototype.verify = function(functionName, actualInvocationCount) {
+    Verification.prototype.verify = function (functionName, actualInvocationCount) {
         if (this.numberOfInvocationsNotCorrect(actualInvocationCount)) {
             throw new Error('Number of invocations of "' + functionName + '" does not match the expected amount of ' + this.invocationCount + '.' +
             ' Actual number of invocations is ' + actualInvocationCount);
         }
     };
 
-    var Exactly = function(invocationCount) {
+    var Exactly = function (invocationCount) {
         Verification.call(this, invocationCount);
     };
 
     Exactly.prototype = Verification.prototype;
     Exactly.prototype.constructor = Exactly;
 
-    var AtLeast = function(invocationCount) {
+    var AtLeast = function (invocationCount) {
         Verification.call(this, invocationCount);
 
-        this.numberOfInvocationsNotCorrect = function(actualInvocationCount) {
+        this.numberOfInvocationsNotCorrect = function (actualInvocationCount) {
             return actualInvocationCount < this.invocationCount;
         };
     };
@@ -159,10 +163,10 @@ var mockito4js = (function mockito4js() {
     AtLeast.prototype = Verification.prototype;
     AtLeast.prototype.constructor = AtLeast;
 
-    var AtMost = function(invocationCount) {
+    var AtMost = function (invocationCount) {
         Verification.call(this, invocationCount);
 
-        this.numberOfInvocationsNotCorrect = function(actualInvocationCount) {
+        this.numberOfInvocationsNotCorrect = function (actualInvocationCount) {
             return actualInvocationCount > this.invocationCount;
         };
     };
@@ -231,7 +235,7 @@ var mockito4js = (function mockito4js() {
             });
         } else {
             replaceFunctions(this, object, function (functionArguments) {
-                return function() {
+                return function () {
                     functionArguments.object[functionArguments.property] = execution;
                     return functionArguments.object[functionArguments.property].apply(this, arguments);
                 };

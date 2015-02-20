@@ -1,0 +1,11 @@
+# mac
+.DS_Store
+
+# IntelliJ project files
+.idea
+*.iml
+
+# Node & Bower
+node_modules
+
+

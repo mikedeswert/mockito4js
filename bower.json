@@ -1,0 +1,28 @@
+{
+  "name": "mockito4js",
+  "version": "1.0.0-alpha",
+  "homepage": "https://github.com/mikedeswert/mockito4js",
+  "authors": [
+    "Mike De Swert"
+  ],
+  "description": "A small JavaScript library that can be used to mock functions and spy on objects. The syntax is heavily inspired by the Mockito library used for testing Java applications.",
+  "main": "src/main/mockito4.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "mock",
+    "spy",
+    "unit",
+    "test",
+    "js"
+  ],
+  "license": "GPL",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
