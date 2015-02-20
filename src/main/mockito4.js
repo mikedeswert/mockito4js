@@ -217,8 +217,8 @@ var mockito4js = (function mockito4js() {
         }
 
         function arrayContains(array, value) {
-            for(var i = 0; i < array.length; i++) {
-                if(array[i] == value) {
+            for (var i = 0; i < array.length; i++) {
+                if (array[i] == value) {
                     return true;
                 }
             }
@@ -240,25 +240,15 @@ var mockito4js = (function mockito4js() {
         if (object.isSpy) {
             replaceFunctions(this, object, function (functionArguments) {
                 functionArguments.functionToReplace = execution;
-                return function() {
-                    //if(functionArguments.object.prototype != undefined && functionArguments.object.prototype[functionArguments.property] != undefined) {
-                    //    functionArguments.object.prototype[functionArguments.property] = mockFunction(functionArguments);
-                    //} else {
-                        functionArguments.object[functionArguments.property] = mockFunction(functionArguments);
-                    //}
+                return function () {
+                    functionArguments.object[functionArguments.property] = mockFunction(functionArguments);
                 };
             });
         } else {
             replaceFunctions(this, object, function (functionArguments) {
-                    return function() {
-                        //if(functionArguments.object.prototype != undefined && functionArguments.object.prototype[functionArguments.property] != undefined) {
-                        //    functionArguments.object.prototype[functionArguments.property] = execution;
-                        //} else {
-                            functionArguments.object[functionArguments.property] = execution;
-                        //}
-                    };
-                    //functionArguments.object[functionArguments.property] = execution;
-                    //return functionArguments.object[functionArguments.property].apply(this, arguments);
+                return function () {
+                    functionArguments.object[functionArguments.property] = execution;
+                };
             });
         }
     }
@@ -289,16 +279,14 @@ var mockito4js = (function mockito4js() {
 
     function replaceFunctions(target, object, replacementFunction, additionalArguments) {
         for (var property in object) {
-            //if (object.hasOwnProperty(property)) {
-                if (typeof object[property] == 'function') {
-                    target[property] = replacementFunction({
-                        object: object,
-                        property: property,
-                        functionToReplace: object[property],
-                        additionalArguments: additionalArguments
-                    });
-                }
-            //}
+            if (typeof object[property] == 'function') {
+                target[property] = replacementFunction({
+                    object: object,
+                    property: property,
+                    functionToReplace: object[property],
+                    additionalArguments: additionalArguments
+                });
+            }
         }
     }
 
