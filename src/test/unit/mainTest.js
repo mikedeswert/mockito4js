@@ -2,6 +2,7 @@
 
 describe('mockito4js', function () {
     var object;
+
     beforeEach(function () {
         object = {
             functionOne: function() {},
@@ -34,7 +35,26 @@ describe('mockito4js', function () {
     });
 
     describe('verify', function() {
+        var objectSpy;
 
+        beforeEach(function() {
+            objectSpy = mockito4js.spy(object);
+        });
+
+        it("should wrap the given spy in a Verify object exposing all the objects public functions", function() {
+            var actual = mockito4js.verify(objectSpy, mockito4js.once());
+
+            expect(actual.functionOne instanceof Function).toBe(true);
+            expect(actual.functionTwo instanceof Function).toBe(true);
+        });
+
+        it('should call the verifier verify method with the correct function name and actual invocation count', function() {
+            var verifierSpy = mockito4js.spy(mockito4js.once());
+            mockito4js.doNothing().when(verifierSpy).verify();
+            mockito4js.verify(objectSpy, verifierSpy).functionOne('argumentOne');
+
+            mockito4js.verify(verifierSpy, mockito4js.once()).verify('functionOne', 0);
+        });
     });
 
     describe('doReturn', function() {

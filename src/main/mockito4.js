@@ -205,15 +205,24 @@ var mockito4js = (function mockito4js() {
                 return false;
             }
 
-            for (var j = 0; j < expectedArguments; j++) {
+            for (var j = 0; j < expectedArguments.length; j++) {
                 var expectedArgument = expectedArguments[j];
 
-                if (invocation.arguments.indexOf(expectedArgument) == -1) {
+                if (!arrayContains(invocation.arguments, expectedArgument)) {
                     return false;
                 }
             }
 
             return true;
+        }
+
+        function arrayContains(array, value) {
+            for(var i = 0; i < array.length; i++) {
+                if(array[i] == value) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
@@ -231,14 +240,25 @@ var mockito4js = (function mockito4js() {
         if (object.isSpy) {
             replaceFunctions(this, object, function (functionArguments) {
                 functionArguments.functionToReplace = execution;
-                return mockFunction(functionArguments);
+                return function() {
+                    //if(functionArguments.object.prototype != undefined && functionArguments.object.prototype[functionArguments.property] != undefined) {
+                    //    functionArguments.object.prototype[functionArguments.property] = mockFunction(functionArguments);
+                    //} else {
+                        functionArguments.object[functionArguments.property] = mockFunction(functionArguments);
+                    //}
+                };
             });
         } else {
             replaceFunctions(this, object, function (functionArguments) {
-                return function () {
-                    functionArguments.object[functionArguments.property] = execution;
-                    return functionArguments.object[functionArguments.property].apply(this, arguments);
-                };
+                    return function() {
+                        //if(functionArguments.object.prototype != undefined && functionArguments.object.prototype[functionArguments.property] != undefined) {
+                        //    functionArguments.object.prototype[functionArguments.property] = execution;
+                        //} else {
+                            functionArguments.object[functionArguments.property] = execution;
+                        //}
+                    };
+                    //functionArguments.object[functionArguments.property] = execution;
+                    //return functionArguments.object[functionArguments.property].apply(this, arguments);
             });
         }
     }
@@ -269,7 +289,7 @@ var mockito4js = (function mockito4js() {
 
     function replaceFunctions(target, object, replacementFunction, additionalArguments) {
         for (var property in object) {
-            if (object.hasOwnProperty(property)) {
+            //if (object.hasOwnProperty(property)) {
                 if (typeof object[property] == 'function') {
                     target[property] = replacementFunction({
                         object: object,
@@ -278,7 +298,7 @@ var mockito4js = (function mockito4js() {
                         additionalArguments: additionalArguments
                     });
                 }
-            }
+            //}
         }
     }
 
