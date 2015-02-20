@@ -7,7 +7,7 @@ A small JavaScript library that can be used to mock functions and spy on objects
 
 Modifies and returns the given **Object** so that certain function calls can be verified.
 
-*Currently this function only supports Objects. Support for Functions might be added in the future.
+*Currently this function only supports Objects. Support for Functions might be added in the future.*
 
 var objectSpy = mockito4js.spy(**[Object]**);
 
@@ -22,6 +22,9 @@ mockito4js.verify(**[spy]**, **[Verifier]**)**.funcitonToVerify([arguments])**
 * mockito4js.never() 
    
    *verifies if there were no invocations*
+* mockito4js.once() 
+   
+   *verifies that there was exactly one invocation*
 * mockito4js.times(**[expectedInvocationCount]**) 
    
    *verifies if number of invocations is equal to the expectedInvocationCount*
