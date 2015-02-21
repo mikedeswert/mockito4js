@@ -50,6 +50,9 @@
  * for the JavaScript code in this page.
  *
  */
+
+"use strict";
+
 var mockito4js = (function mockito4js() {
     var mockito4js = {};
 
@@ -205,8 +208,8 @@ var mockito4js = (function mockito4js() {
                 return false;
             }
 
-            for (var j = 0; j < expectedArguments.length; j++) {
-                var expectedArgument = expectedArguments[j];
+            for (var i = 0; i < expectedArguments.length; i++) {
+                var expectedArgument = expectedArguments[i];
 
                 if (!arrayContains(invocation.arguments, expectedArgument)) {
                     return false;
@@ -273,7 +276,9 @@ var mockito4js = (function mockito4js() {
 
     function replaceFunctions(target, object, replacementFunction, additionalArguments) {
         for (var property in object) {
+            //noinspection JSUnfilteredForInLoop
             if (typeof object[property] == 'function') {
+                //noinspection JSUnfilteredForInLoop
                 target[property] = replacementFunction({
                     object: object,
                     property: property,

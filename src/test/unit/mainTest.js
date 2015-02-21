@@ -58,20 +58,4 @@ describe('mockito4js', function () {
             mockito4js.verify(verifierSpy, mockito4js.once()).verify('functionOne', 1);
         });
     });
-
-    describe('doReturn', function() {
-
-    });
-
-    describe('doNothing', function() {
-
-    });
-
-    describe('doThrow', function() {
-
-    });
-
-    describe('doFire', function() {
-
-    });
 });
