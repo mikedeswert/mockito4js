@@ -51,9 +51,11 @@ describe('mockito4js', function () {
         it('should call the verifier verify method with the correct function name and actual invocation count', function() {
             var verifierSpy = mockito4js.spy(mockito4js.once());
             mockito4js.doNothing().when(verifierSpy).verify();
+            objectSpy.functionOne('argumentOne');
+
             mockito4js.verify(objectSpy, verifierSpy).functionOne('argumentOne');
 
-            mockito4js.verify(verifierSpy, mockito4js.once()).verify('functionOne', 0);
+            mockito4js.verify(verifierSpy, mockito4js.once()).verify('functionOne', 1);
         });
     });
 

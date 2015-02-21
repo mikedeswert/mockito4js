@@ -228,11 +228,7 @@ var mockito4js = (function mockito4js() {
 
     function MockBuilder(execution) {
         this.when = function (object) {
-            if (typeof object == 'function') {
-                object = execution;
-            } else {
-                return new Mock(object, execution);
-            }
+            return new Mock(object, execution);
         }
     }
 

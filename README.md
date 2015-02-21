@@ -38,32 +38,32 @@ mockito4js.verify(**[spy]**, **[Verifier]**)**.funcitonToVerify([arguments])**
 
 ### doReturn
 
-Returns the **[return value]** when **functionToMock** is called. If the argument passed to when is a function, the **functionToMock** becomes optional.
+Returns the **[return value]** when **functionToMock** is called.
 
 *Currently the "do" methods return the value regardless of the arguments passed to the functionToMock. I'm planning to add this support in the future though.*
 
-mockito4js.doReturn(**[return value]**).when(**[Object | Function | spy]**)**.functionToMock()**;
+mockito4js.doReturn(**[return value]**).when(**[Object | spy]**)**.functionToMock()**;
 
 ### doNothing
 
-Replaces the **functionToMock** with a function that does nothing. If the argument passed to when is a function, the **functionToMock** becomes optional.
+Replaces the **functionToMock** with a function that does nothing.
 
 *Currently the "do" methods return the value regardless of the arguments passed to the functionToMock. I'm planning to add this support in the future though.*
 
-mockito4js.doNothing().when(**[Object | Function | spy]**)**.functionToMock()**;
+mockito4js.doNothing().when(**[Object | spy]**)**.functionToMock()**;
 
 ### doThrow
 
-Throws the given **Error** when **functionToMock** is called. If the argument passed to when is a function, the **functionToMock** becomes optional.
+Throws the given **Error** when **functionToMock** is called.
 
 *Currently the "do" methods return the value regardless of the arguments passed to the functionToMock. I'm planning to add this support in the future though.*
 
-mockito4js.doThrow(**[Error]**).when(**[Object | Function | spy]**)**.functionToMock()**;
+mockito4js.doThrow(**[Error]**).when(**[Object | spy]**)**.functionToMock()**;
 
 ### doFire
 
-Fires an event with the given **eventName** on the given **DOM element** when **functionToMock** is called. If the argument passed to when is a function, the **functionToMock** becomes optional.
+Fires an event with the given **eventName** on the given **DOM element** when **functionToMock** is called.
 
 *Currently the "do" methods return the value regardless of the arguments passed to the functionToMock. I'm planning to add this support in the future though.*
 
-mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[Object | Function | spy]**)**.functionToMock()**;
+mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[Object | spy]**)**.functionToMock()**;
