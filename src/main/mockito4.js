@@ -65,7 +65,7 @@ var mockito4js = (function mockito4js() {
     };
 
     mockito4js.doThrow = function (error) {
-        if (typeof error != 'Error') {
+        if (!error instanceof Error) {
             throw new Error('Argument passed to doThrow is not an Error!');
         }
 
@@ -250,19 +250,17 @@ var mockito4js = (function mockito4js() {
     }
 
     function MockEvent(name) {
-        var event = createEvent(name);
+        var event;
 
-        function createEvent(name) {
-            if (document.createEvent) {
-                event = document.createEvent("HTMLEvents");
-                event.initEvent(name, true, true);
-            } else {
-                event = document.createEventObject();
-                event.eventType = name;
-            }
-
-            event.eventName = name;
+        if (document.createEvent) {
+            event = document.createEvent("HTMLEvents");
+            event.initEvent(name, true, true);
+        } else {
+            event = document.createEventObject();
+            event.eventType = name;
         }
+
+        event.eventName = name;
 
         this.fire = function (target) {
             if (document.createEvent) {
