@@ -10,6 +10,50 @@ describe('mockito4js', function () {
         };
     });
 
+    describe('every do method', function() {
+        it('should call the mock function if arguments passed to function call match given arguments', function() {
+            mockito4js.doReturn('return value').when(object).functionOne('some argument');
+
+            var actual = object.functionOne('some argument');
+
+            expect(actual).toBe('return value');
+        });
+
+        it('should call the mock function arguments passed to function call is null and match given arguments', function() {
+            mockito4js.doReturn('return value').when(object).functionOne(null);
+
+            var actual = object.functionOne(null);
+
+            expect(actual).toBe('return value');
+        });
+
+
+        it('should call the mock function arguments passed to function call is undefined and match given arguments', function() {
+            mockito4js.doReturn('return value').when(object).functionOne(undefined);
+
+            var actual = object.functionOne(undefined);
+
+            expect(actual).toBe('return value');
+        });
+
+        it('should call the mock function if type of arguments passed to function call match given any', function() {
+            mockito4js.doReturn('return value').when(object).functionOne(mockito4js.any('string'));
+
+            var actual = object.functionOne('random argument');
+
+            expect(actual).toBe('return value');
+        });
+
+        it('should not call the mock function if arguments passed to function call do not match given arguments', function() {
+            mockito4js.doReturn('return value').when(object).functionOne('another argument');
+
+            var actual = object.functionOne('some argument');
+
+            expect(actual).toBe(undefined);
+        });
+
+    });
+
     describe('doReturn', function() {
         it('should return given value when function on given object is called', function() {
             mockito4js.doReturn('return value').when(object).functionOne();

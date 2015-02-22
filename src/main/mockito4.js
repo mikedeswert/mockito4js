@@ -99,10 +99,14 @@ var mockito4js = (function mockito4js() {
 
     mockito4js.spy = function (object) {
         object.invocations = {};
-        replaceFunctions(object, object, mockFunction);
+        replaceFunctions(object, object, createInvocationCountingFunction);
         object.isSpy = true;
 
         return object;
+    };
+
+    mockito4js.any = function(type) {
+        return new Any(type);
     };
 
     mockito4js.verify = function (spy, verification) {
@@ -191,42 +195,25 @@ var mockito4js = (function mockito4js() {
             var invocations = [];
 
             object.invocations[functionName].forEach(function (invocation) {
-                if (invocationContainsAllArguments(invocation, expectedArguments)) {
+                if (expectedArguments.length == 0 || containsAllArguments(invocation.actualArguments, expectedArguments)) {
                     invocations.push(invocation);
                 }
             });
 
             return invocations;
         }
+    }
 
-        function invocationContainsAllArguments(invocation, expectedArguments) {
-            if (expectedArguments.length == 0) {
-                return true;
-            }
+    function Any(type) {
+        this.type = type;
 
-            if (invocation.arguments.length != expectedArguments.length) {
+        this.matches = function(argument) {
+            try {
+                return typeof argument == type || argument instanceof type;
+            } catch(error) {
                 return false;
             }
-
-            for (var i = 0; i < expectedArguments.length; i++) {
-                var expectedArgument = expectedArguments[i];
-
-                if (!arrayContains(invocation.arguments, expectedArgument)) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        function arrayContains(array, value) {
-            for (var i = 0; i < array.length; i++) {
-                if (array[i] == value) {
-                    return true;
-                }
-            }
-            return false;
-        }
+        };
     }
 
     function MockBuilder(execution) {
@@ -240,15 +227,30 @@ var mockito4js = (function mockito4js() {
             replaceFunctions(this, object, function (functionArguments) {
                 functionArguments.functionToReplace = execution;
                 return function () {
-                    functionArguments.object[functionArguments.property] = mockFunction(functionArguments);
+                    functionArguments.object[functionArguments.property] = createMockFunction(arguments,
+                                                                                        functionArguments.object[functionArguments.property],
+                                                                                        createInvocationCountingFunction(functionArguments));
                 };
             });
         } else {
             replaceFunctions(this, object, function (functionArguments) {
                 return function () {
-                    functionArguments.object[functionArguments.property] = execution;
+                    functionArguments.object[functionArguments.property] = createMockFunction(arguments,
+                                                                                        functionArguments.object[functionArguments.property],
+                                                                                        execution);
                 };
             });
+        }
+
+        function createMockFunction(argumentsToVerify, realFunction, mockFunction) {
+            return function() {
+                if(containsAllArguments(arguments, argumentsToVerify)) {
+                    return mockFunction.apply(this, arguments);
+                }
+
+                return realFunction.apply(this, arguments);
+
+            }
         }
     }
 
@@ -289,14 +291,43 @@ var mockito4js = (function mockito4js() {
         }
     }
 
-    function mockFunction(functionArguments) {
+    function createInvocationCountingFunction(functionArguments) {
         functionArguments.object.invocations[functionArguments.property] = [];
 
         return function () {
-            functionArguments.object.invocations[functionArguments.property].push({arguments: arguments});
+            functionArguments.object.invocations[functionArguments.property].push({actualArguments: arguments});
 
             return functionArguments.functionToReplace.apply(this, arguments);
         }
+    }
+
+    function containsAllArguments(actualArguments, expectedArguments) {
+        if (actualArguments.length != expectedArguments.length) {
+            return false;
+        }
+
+        for (var i = 0; i < expectedArguments.length; i++) {
+            var expectedArgument = expectedArguments[i];
+
+            if (!arrayContains(actualArguments, expectedArgument)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function arrayContains(array, value) {
+        for (var i = 0; i < array.length; i++) {
+            if(value instanceof Any && value.matches(array[i])) {
+                return true
+            }
+
+            if (array[i] == value) {
+                return true;
+            }
+        }
+        return false;
     }
 
     return mockito4js;
