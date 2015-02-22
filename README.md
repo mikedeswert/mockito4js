@@ -64,15 +64,11 @@ mockito4js.doReturn([return value]).when([Object | spy]).functionToMock(**mockit
 
 Returns the **[return value]** when **functionToMock** is called.
 
-*Currently the "do" methods return the value regardless of the arguments passed to the functionToMock. I'm planning to add this support in the future though.*
-
 mockito4js.doReturn(**[return value]**).when(**[Object | spy]**)**.functionToMock()**;
 
 ### doNothing
 
 Replaces the **functionToMock** with a function that does nothing.
-
-*Currently the "do" methods return the value regardless of the arguments passed to the functionToMock. I'm planning to add this support in the future though.*
 
 mockito4js.doNothing().when(**[Object | spy]**)**.functionToMock()**;
 
@@ -80,14 +76,10 @@ mockito4js.doNothing().when(**[Object | spy]**)**.functionToMock()**;
 
 Throws the given **Error** when **functionToMock** is called.
 
-*Currently the "do" methods return the value regardless of the arguments passed to the functionToMock. I'm planning to add this support in the future though.*
-
 mockito4js.doThrow(**[Error]**).when(**[Object | spy]**)**.functionToMock()**;
 
 ### doFire
 
 Fires an event with the given **eventName** on the given **DOM element** when **functionToMock** is called.
-
-*Currently the "do" methods return the value regardless of the arguments passed to the functionToMock. I'm planning to add this support in the future though.*
 
 mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[Object | spy]**)**.functionToMock()**;
