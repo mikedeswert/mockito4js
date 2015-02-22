@@ -13,8 +13,10 @@ var objectSpy = mockito4js.spy(**[Object]**);
 
 ### verify
 
-Verifies the number of **functionToVerify** invocations of the given **spy** based on the given **Verifier**. If no arguments are passed to the **functionToVerify** then all invocations to the function are counted.
-If arguments are passed to the **functionToVerify**, then only invocations with those arguments in that specific order are counted.
+Verifies the number of **functionToVerify** invocations of the given **spy** based on the given **Verifier**.  
+If no arguments are passed to the **functionToVerify** then all invocations to the function are counted.  
+If arguments are passed to the **functionToVerify**, then only invocations with those arguments in that specific order are counted.  
+Verify throws an error when its conditions are not satisfied and thus fails the test it is used in.
 
 mockito4js.verify(**[spy]**, **[Verifier]**)**.funcitonToVerify([arguments])**
 
@@ -35,6 +37,28 @@ mockito4js.verify(**[spy]**, **[Verifier]**)**.funcitonToVerify([arguments])**
    
    *verifies if number of invocations is equal to or less than the expectedInvocationCount*
 
+### any
+
+Any can be used when you don't care about the specific value of an argument but do want to check its type.
+It can be used either with the **mockito4js.verify()** or the **"doMethods"**.
+
+mockito4js.verify([spy], [Verifier]).funcitonToVerify(**mockito4js.any([ArgumentType || 'argumentType'])**);
+
+mockito4js.doReturn([return value]).when([Object | spy]).functionToMock(**mockito4js.any([ArgumentType || 'argumentType'])**);
+
+   *Ex.*
+   
+   *spy.someFunction(new String('string'));  
+   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any(String));* **=> No error**
+   
+   *spy.someFunction('string');  
+   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any(String));* **=> Error**
+   
+   *spy.someFunction(new String('string'));  
+   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any('string'));* **=> Error**
+   
+   *spy.someFunction('string');  
+   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any('string'));* **=> No Error**
 
 ### doReturn
 
