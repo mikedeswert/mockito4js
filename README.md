@@ -1,7 +1,13 @@
 # mockito4js
 A small JavaScript library that can be used to mock functions and spy on objects. The syntax is heavily inspired by the Mockito library used for testing Java applications.
 
-## API
+## Installation
+
+```shell
+bower install mockito4js
+```
+
+## Documentation
 
 ### spy
 
