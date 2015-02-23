@@ -89,3 +89,7 @@ mockito4js.doThrow(**[Error]**).when(**[Object | spy]**)**.functionToMock()**;
 Fires an event with the given **eventName** on the given **DOM element** when **functionToMock** is called.
 
 mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[Object | spy]**)**.functionToMock()**;
+
+## License
+
+Licensed under GPLv3
