@@ -92,4 +92,4 @@ mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[Object | spy]**
 
 ## License
 
-Licensed under GPLv3
+Licensed under MIT
