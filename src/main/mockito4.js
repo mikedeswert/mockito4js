@@ -22,7 +22,7 @@
  * through which recipients can access the Corresponding Source.
  *
  *
- * The name Mockito is copyrighted by the Mockito contributors and falls under the following license
+ * The name Mockito is copyrighted by the Mockito contributors
  * https://github.com/mockito/mockito
  *
  */
