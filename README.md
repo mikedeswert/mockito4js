@@ -48,9 +48,9 @@ mockito4js.verify(**[spy]**, **[Verifier]**)**.funcitonToVerify([arguments])**
 Any can be used when you don't care about the specific value of an argument but do want to check its type.
 It can be used either with the **mockito4js.verify()** or the **"doMethods"**.
 
-mockito4js.verify([spy], [Verifier]).funcitonToVerify(**mockito4js.any([ArgumentType || 'argumentType'])**);
+mockito4js.verify([spy], [Verifier]).funcitonToVerify(**mockito4js.any([ArgumentType | 'argumentType'])**);
 
-mockito4js.doReturn([return value]).when([Object | spy]).functionToMock(**mockito4js.any([ArgumentType || 'argumentType'])**);
+mockito4js.doReturn([return value]).when([Object | spy]).functionToMock(**mockito4js.any([ArgumentType | 'argumentType'])**);
 
    *Ex.*
    
@@ -71,6 +71,10 @@ mockito4js.doReturn([return value]).when([Object | spy]).functionToMock(**mockit
 Returns the **[return value]** when **functionToMock** is called.
 
 mockito4js.doReturn(**[return value]**).when(**[Object | spy]**)**.functionToMock()**;
+
+Return the **[return value]** when property with **[propertyName]** is accessed.
+
+mockito4js.doReturn(**[return value]**).when(**[Object | spy]**).readsProperty(**[propertyName]**)
 
 ### doNothing
 
