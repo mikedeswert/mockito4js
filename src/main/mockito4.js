@@ -13,7 +13,7 @@ var mockito4js = (function mockito4js() {
     };
 
     mockito4js.doReturn = function (returnValue) {
-        return new MockBuilder(function () {
+        return new DoReturnMockBuilder(function () {
             return returnValue;
         });
     };
@@ -167,13 +167,24 @@ var mockito4js = (function mockito4js() {
         };
     }
 
-    function MockBuilder(execution) {
+    var MockBuilder = function(execution) {
         this.when = function (object) {
             return new Mock(object, execution);
         }
-    }
+    };
 
-    function Mock(object, execution) {
+    var DoReturnMockBuilder = function (execution) {
+        MockBuilder.call(this, execution);
+
+        this.when = function (object) {
+            return new DoReturnMock(object, execution);
+        }
+    };
+
+    DoReturnMockBuilder.prototype = MockBuilder.prototype;
+    DoReturnMockBuilder.prototype.constructor = DoReturnMockBuilder;
+
+    var Mock = function(object, execution) {
         if (object.isSpy) {
             replaceFunctions(this, object, function (functionArguments) {
                 functionArguments.functionToReplace = execution;
@@ -203,7 +214,23 @@ var mockito4js = (function mockito4js() {
 
             }
         }
-    }
+    };
+
+    var DoReturnMock = function (object, execution) {
+        Mock.call(this, object, execution);
+
+        this.readsProperty = function(propertyName) {
+            if(typeof object[propertyName] == 'function') {
+                throw new Error('Argument passed to readsProperty can not be the name of a function')
+            }
+
+            object[propertyName] = execution();
+        };
+
+    };
+
+    DoReturnMock.prototype = Mock.prototype;
+    DoReturnMock.prototype.constructor = DoReturnMock;
 
     function MockEvent(name) {
         var event;

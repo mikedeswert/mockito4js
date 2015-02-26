@@ -6,7 +6,8 @@ describe('mockito4js', function () {
     beforeEach(function () {
         object = {
             functionOne: function() {},
-            functionTwo: function() {}
+            functionTwo: function() {},
+            propertyOne: 'propertyValue'
         };
     });
 
@@ -70,6 +71,57 @@ describe('mockito4js', function () {
             var actual = objectSpy.functionOne();
 
             expect(actual).toBe('return value');
+        });
+
+        it('should return a mock with a readsProperty method given object when when() method is called', function() {
+            var actual = mockito4js.doReturn('return value').when(object);
+
+            expect(actual.readsProperty).not.toBe(undefined);
+            expect(typeof actual.readsProperty).toBe('function');
+        });
+
+        it('should return given value when property on given object is accessed', function() {
+            mockito4js.doReturn('return value').when(object).readsProperty('propertyOne');
+
+            var actual = object.propertyOne;
+
+            expect(actual).toBe('return value');
+        });
+
+        it('should throw an error when property name passed to readsProperty is name of a function on given object', function() {
+            var actual = mockito4js.doReturn('return value').when(object);
+
+            expect(function() {
+                actual.readsProperty('functionOne');
+            }).toThrow(new Error('Argument passed to readsProperty can not be the name of a function'));
+        });
+
+        it('should return a mock with a readsProperty method given spy when when() method is called', function() {
+            var objectSpy = mockito4js.spy(object);
+
+            var actual = mockito4js.doReturn('return value').when(objectSpy);
+
+            expect(actual.readsProperty).not.toBe(undefined);
+            expect(typeof actual.readsProperty).toBe('function');
+        });
+
+        it('should return given value when property on given spy is accessed', function() {
+            var objectSpy = mockito4js.spy(object);
+            mockito4js.doReturn('return value').when(objectSpy).readsProperty('propertyOne');
+
+            var actual = objectSpy.propertyOne;
+
+            expect(actual).toBe('return value');
+        });
+
+        it('should throw an error when property name passed to readsProperty is name of a function on given spy', function() {
+            var objectSpy = mockito4js.spy(object);
+
+            var actual = mockito4js.doReturn('return value').when(objectSpy);
+
+            expect(function() {
+                actual.readsProperty('functionOne');
+            }).toThrow(new Error('Argument passed to readsProperty can not be the name of a function'));
         });
     });
 
