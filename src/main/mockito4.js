@@ -7,6 +7,14 @@
 var mockito4js = (function mockito4js() {
     var mockito4js = {};
 
+    mockito4js.globalize = function() {
+        for(var property in mockito4js) {
+            if(mockito4js.hasOwnProperty(property)) {
+                window[property] = mockito4js[property];
+            }
+        }
+    };
+
     mockito4js.doNothing = function () {
         return new MockBuilder(function () {
         });
