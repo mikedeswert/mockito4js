@@ -9,6 +9,15 @@ bower install mockito4js
 
 ## Documentation
 
+### globalize
+
+If you're convinced that the mockito4js API will not conflict with other libraries then you can use the globalize function at the start of your tests.  
+The globalize function puts the mockito4js functions on the global scope, thus increasing readability by removing the need to call the functions on the mockito4js object.
+
+mockito4js.globalize();
+
+**mockito4js.verify**(spy, **mockito4js.once**()).functionToVerify() **=>** **verify**(spy, **once**()).functionToVerify();
+
 ### spy
 
 Modifies and returns the given **Object** so that certain function calls can be verified.
