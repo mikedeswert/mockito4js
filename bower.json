@@ -1,6 +1,6 @@
 {
   "name": "mockito4js",
-  "version": "1.0.3-beta",
+  "version": "v1.0.3-beta",
   "homepage": "https://github.com/mikedeswert/mockito4js",
   "authors": [
     "Mike De Swert"
@@ -17,7 +17,7 @@
     "test",
     "js"
   ],
-  "license": "GPL",
+  "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
