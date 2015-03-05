@@ -93,7 +93,7 @@ describe('mockito4js', function () {
 
             expect(function() {
                 actual.readsProperty('functionOne');
-            }).toThrow(new Error('Argument passed to readsProperty can not be the name of a function'));
+            }).toThrow(new Error('Argument passed to readsProperty can not be the name of a function. Use when(object).nameOfFunction() instead.'));
         });
 
         it('should return a mock with a readsProperty method given spy when when() method is called', function() {
@@ -121,7 +121,7 @@ describe('mockito4js', function () {
 
             expect(function() {
                 actual.readsProperty('functionOne');
-            }).toThrow(new Error('Argument passed to readsProperty can not be the name of a function'));
+            }).toThrow(new Error('Argument passed to readsProperty can not be the name of a function. Use when(object).nameOfFunction() instead.'));
         });
     });
 

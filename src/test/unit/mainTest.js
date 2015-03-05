@@ -11,25 +11,57 @@ describe('mockito4js', function () {
     });
 
     describe('spy', function() {
-        beforeEach(function() {
-            mockito4js.spy(object);
+        describe('on object', function() {
+            beforeEach(function() {
+                mockito4js.spy(object);
+            });
+
+            it('should add an isSpy attribute to the object', function() {
+                expect(object.isSpy).toBe(true);
+            });
+
+            it('should add an invocations object to the object', function() {
+                expect(object.invocations instanceof Object).toBe(true);
+            });
+
+            it('should replace all functions of the object with mock functions that register invocations', function() {
+                object.functionOne();
+                object.functionTwo();
+
+                expect(object.invocations['functionOne'].length).toBe(1);
+                expect(object.invocations['functionTwo'].length).toBe(1);
+            });
         });
 
-        it('should add an isSpy attribute to the object', function() {
-            expect(object.isSpy).toBe(true);
+        describe('on function', function() {
+            var fn;
+            var fnResult;
+
+            beforeEach(function() {
+                fnResult = '';
+                fn = function() {
+                    fnResult = 'result';
+                };
+
+                fn = mockito4js.spy(fn);
+            });
+
+            it('should add an isSpy attribute to the function', function() {
+                expect(fn.isSpy).toBe(true);
+            });
+
+            it('should add an invocations object to the function', function() {
+                expect(fn.invocations instanceof Object).toBe(true);
+            });
+
+            it('should call and register the original function', function() {
+                fn();
+
+                expect(fnResult).toBe('result');
+                expect(fn.invocations['self'].length).toBe(1);
+            });
         });
 
-        it('should add an invocations object to the object', function() {
-            expect(object.invocations instanceof Object).toBe(true);
-        });
-
-        it('should replace all functions of the object with mock functions that register invocations', function() {
-            object.functionOne();
-            object.functionTwo();
-
-            expect(object.invocations['functionOne'].length).toBe(1);
-            expect(object.invocations['functionTwo'].length).toBe(1);
-        });
     });
 
     describe('verify', function() {
