@@ -117,19 +117,19 @@ describe('mockito4js', function () {
                 expect(actual).toBe('return value');
                 expect(fnResult).toBe('');
             });
+        });
 
-            it('should throw error given object or function passed to when is not a spy', function() {
-                expect(
-                    function() {
-                        mockito4js.doNothing().when({})
-                    }
-                ).toThrow(new Error('when can only be used with spies. Use mockito4js.spy() to create a spy.'));
-                expect(
-                    function() {
-                        mockito4js.doReturn('return value').when({})
-                    }
-                ).toThrow(new Error('when can only be used with spies. Use mockito4js.spy() to create a spy.'));
-            });
+        it('should throw error given argument passed to when is not a spy', function() {
+            expect(
+                function() {
+                    mockito4js.doNothing().when({})
+                }
+            ).toThrow(new Error('Argument passed to when is not a spy. Use mockito4js.spy() to create one.'));
+            expect(
+                function() {
+                    mockito4js.doReturn('return value').when({})
+                }
+            ).toThrow(new Error('Argument passed to when is not a spy. Use mockito4js.spy() to create one.'));
         });
     });
 
