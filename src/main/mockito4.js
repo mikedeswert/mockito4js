@@ -7,9 +7,9 @@
 var mockito4js = (function mockito4js() {
     var mockito4js = {};
 
-    mockito4js.globalize = function() {
-        for(var property in mockito4js) {
-            if(mockito4js.hasOwnProperty(property)) {
+    mockito4js.globalize = function () {
+        for (var property in mockito4js) {
+            if (mockito4js.hasOwnProperty(property)) {
                 window[property] = mockito4js[property];
             }
         }
@@ -58,14 +58,14 @@ var mockito4js = (function mockito4js() {
 
     mockito4js.spy = function (object) {
 
-        if(typeof object == 'function') {
+        if (typeof object == 'function') {
             var spyFunction;
-            spyFunction = function() {
-                if(spyFunction.invocations['self'] == undefined) {
+            spyFunction = function () {
+                if (spyFunction.invocations['self'] == undefined) {
                     spyFunction.invocations['self'] = [];
                 }
                 spyFunction.invocations['self'].push({actualArguments: arguments});
-                spyFunction.execution.apply(this, arguments);
+                return spyFunction.execution.apply(this, arguments);
             };
             spyFunction.invocations = {};
             spyFunction.isSpy = true;
@@ -80,7 +80,7 @@ var mockito4js = (function mockito4js() {
         return object;
     };
 
-    mockito4js.any = function(type) {
+    mockito4js.any = function (type) {
         return new Any(type);
     };
 
@@ -182,22 +182,22 @@ var mockito4js = (function mockito4js() {
     function Any(type) {
         this.type = type;
 
-        this.matches = function(argument) {
+        this.matches = function (argument) {
             try {
                 return typeof argument == type || argument instanceof type;
-            } catch(error) {
+            } catch (error) {
                 return false;
             }
         };
     }
 
-    var MockBuilder = function(execution) {
+    var MockBuilder = function (execution) {
         this.when = function (object) {
-            if(!fn.isSpy) {
+            if (!object.isSpy) {
                 throw new Error('when can only be used with spies. Use mockito4js.spy() to create a spy.');
             }
 
-            if(typeof object == 'function') {
+            if (typeof object == 'function') {
                 return new MockFunction(object, execution);
             }
             return new MockObject(object, execution);
@@ -208,55 +208,62 @@ var mockito4js = (function mockito4js() {
         MockBuilder.call(this, execution);
 
         this.when = function (object) {
-            if(!fn.isSpy) {
+            if (!object.isSpy) {
                 throw new Error('when can only be used with spies. Use mockito4js.spy() to create a spy.');
             }
 
-            return new DoReturnMock(object, execution);
+            if (typeof object == 'function') {
+                return new MockFunction(object, execution);
+            }
+
+            return new DoReturnMockObject(object, execution);
         }
     };
 
     DoReturnMockBuilder.prototype = MockBuilder.prototype;
     DoReturnMockBuilder.prototype.constructor = DoReturnMockBuilder;
 
-    var MockFunction = function(fn, execution) {
-        this.isCalledWith = function() {
-            fn.execution = createMockFunction(arguments,
-                                fn.execution,
-                                createInvocationCountingFunction({
-                                    object: fn,
-                                    property: 'self',
-                                    functionToReplace: execution
-                                }));
+    var MockFunction = function (fn, execution) {
+        this.isCalled = function () {
+            fn.execution = createMockFunction(
+                [],
+                fn.execution,
+                createInvocationCountingFunction({
+                    object: fn,
+                    property: 'self',
+                    functionToReplace: execution
+                })
+            );
+        };
+        this.isCalledWith = function () {
+            fn.execution = createMockFunction(
+                arguments,
+                fn.execution,
+                createInvocationCountingFunction({
+                    object: fn,
+                    property: 'self',
+                    functionToReplace: execution
+                })
+            );
         };
     };
 
-    var MockObject = function(object, execution) {
-        if (object.isSpy) {
-            replaceFunctions(this, object, function (functionArguments) {
-                functionArguments.functionToReplace = execution;
-                return function () {
-                    functionArguments.object[functionArguments.property] = createMockFunction(arguments,
-                                                                                        functionArguments.object[functionArguments.property],
-                                                                                        createInvocationCountingFunction(functionArguments));
-                };
-            });
-        } else {
-            replaceFunctions(this, object, function (functionArguments) {
-                return function () {
-                    functionArguments.object[functionArguments.property] = createMockFunction(arguments,
-                                                                                        functionArguments.object[functionArguments.property],
-                                                                                        execution);
-                };
-            });
-        }
+    var MockObject = function (object, execution) {
+        replaceFunctions(this, object, function (functionArguments) {
+            functionArguments.functionToReplace = execution;
+            return function () {
+                functionArguments.object[functionArguments.property] = createMockFunction(arguments,
+                    functionArguments.object[functionArguments.property],
+                    createInvocationCountingFunction(functionArguments));
+            };
+        });
     };
 
-    var DoReturnMock = function (object, execution) {
+    var DoReturnMockObject = function (object, execution) {
         MockObject.call(this, object, execution);
 
-        this.readsProperty = function(propertyName) {
-            if(typeof object[propertyName] == 'function') {
+        this.readsProperty = function (propertyName) {
+            if (typeof object[propertyName] == 'function') {
                 throw new Error('Argument passed to readsProperty can not be the name of a function. Use when(object).nameOfFunction() instead.')
             }
 
@@ -265,8 +272,8 @@ var mockito4js = (function mockito4js() {
 
     };
 
-    DoReturnMock.prototype = MockObject.prototype;
-    DoReturnMock.prototype.constructor = DoReturnMock;
+    DoReturnMockObject.prototype = MockObject.prototype;
+    DoReturnMockObject.prototype.constructor = DoReturnMockObject;
 
     function MockEvent(name) {
         var event;
@@ -306,8 +313,8 @@ var mockito4js = (function mockito4js() {
     }
 
     function createMockFunction(argumentsToVerify, realFunction, mockFunction) {
-        return function() {
-            if(containsAllArguments(arguments, argumentsToVerify)) {
+        return function () {
+            if (containsAllArguments(arguments, argumentsToVerify)) {
                 return mockFunction.apply(this, arguments);
             }
 
@@ -344,7 +351,7 @@ var mockito4js = (function mockito4js() {
 
     function arrayContains(array, value) {
         for (var i = 0; i < array.length; i++) {
-            if(value instanceof Any && value.matches(array[i])) {
+            if (value instanceof Any && value.matches(array[i])) {
                 return true
             }
 
