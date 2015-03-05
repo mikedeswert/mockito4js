@@ -3,15 +3,18 @@
 describe('mockito4js', function () {
     describe('verifiers', function () {
 
-        describe('verify', function() {
-            it('should throw an error when numberOfInvocationsNotCorrect returns true', function() {
+        describe('verify', function () {
+            it('should throw an error when numberOfInvocationsNotCorrect returns true', function () {
                 var verifier = mockito4js.once();
-                expect(function() {
-                    verifier.verify('Some function', 2)}).toThrow(new Error('Number of invocations of "Some function" does not match the expected amount of ' + verifier.invocationCount + '.' +
-                ' Actual number of invocations is 2'));
+                expect(
+                    function () {
+                        verifier.verify('Some function', 2)
+                    }
+                ).toThrow(new Error('Number of invocations of "Some function" does not match the expected amount of ' + verifier.invocationCount + '.' +
+                    ' Actual number of invocations is 2'));
             });
 
-            it('should not throw an error when numberOfInvocationsNotCorrect returns false', function() {
+            it('should not throw an error when numberOfInvocationsNotCorrect returns false', function () {
                 var verifier = mockito4js.once();
                 verifier.verify('Some function', 1);
             });

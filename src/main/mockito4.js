@@ -157,9 +157,41 @@ var mockito4js = (function mockito4js() {
     AtMost.prototype.constructor = AtMost;
 
     function Verifier(spy, verification) {
-        replaceFunctions(this, spy, verifyFunction, {verification: verification});
+        var verifier = this;
 
-        function verifyFunction(functionArguments) {
+        if(typeof spy == 'function') {
+            verifier.wasCalledWith = function() {
+                return verifyFunctionWithArguments({
+                    object: spy,
+                    property: 'self',
+                    functionToReplace: null,
+                    additionalArguments: {
+                        verification: verification
+                    }
+                }).apply(this, arguments);
+            };
+            verifier.wasCalled = function() {
+                return verifyFunctionWithoutArguments({
+                    object: spy,
+                    property: 'self',
+                    functionToReplace: null,
+                    additionalArguments: {
+                        verification: verification
+                    }
+                }).apply(this, arguments);
+            };
+        } else {
+            replaceFunctions(this, spy, verifyFunctionWithArguments, {verification: verification});
+        }
+
+        function verifyFunctionWithoutArguments(functionArguments) {
+            return function () {
+                var invocationCount = getInvocationsWithArguments(functionArguments.object, functionArguments.property, []).length;
+                functionArguments.additionalArguments.verification.verify(functionArguments.property, invocationCount);
+            }
+        }
+
+        function verifyFunctionWithArguments(functionArguments) {
             return function () {
                 var invocationCount = getInvocationsWithArguments(functionArguments.object, functionArguments.property, arguments).length;
                 functionArguments.additionalArguments.verification.verify(functionArguments.property, invocationCount);
