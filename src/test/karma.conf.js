@@ -8,7 +8,7 @@ module.exports = function (config) {
         ],
         frameworks: ['jasmine'],
         files: [
-            'main/**/*.js',
+            '../dist/mockito4.js',
             'test/unit/**/*.js'
         ],
         reporters: ['progress'],

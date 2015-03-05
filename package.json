@@ -1,11 +1,15 @@
 {
   "name": "mockito4js",
-  "version": "v1.0.4-beta",
+  "version": "v1.0.5-beta",
   "description": "A small JavaScript library that can be used to mock functions and spy on objects. The syntax is heavily inspired by the Mockito library used for testing Java applications.",
   "main": "src/main/mockito4.js",
   "dependencies": {},
   "devDependencies": {
     "bower": "^1.3.12",
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-karma": "^0.10.1",
     "jasmine-core": "^2.2.0",
     "karma": "^0.12.31",
     "karma-chrome-launcher": "^0.1.7",
