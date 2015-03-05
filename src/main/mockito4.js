@@ -162,8 +162,6 @@ var mockito4js = (function mockito4js() {
         } else {
             replaceFunctions(this, spy, functionFactory.createVerifyFunction, {verifyArguments: true, verification: verification});
         }
-
-
     }
 
     function Any(type) {

@@ -4,6 +4,7 @@ describe('mockito4js', function () {
     var object,
         fn,
         fnResult;
+    
     beforeEach(function () {
         object = {
             functionOne: function() {},
