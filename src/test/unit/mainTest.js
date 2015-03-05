@@ -1,74 +1,134 @@
 "use strict";
 
 describe('mockito4js', function () {
-    var object;
-
+    var object,
+        fn,
+        fnResult;
+    
     beforeEach(function () {
         object = {
             functionOne: function() {},
             functionTwo: function() {}
         };
+        object = mockito4js.spy(object);
+
+        fn = function() {
+            fnResult = 'result';
+        };
+        fn = mockito4js.spy(fn);
+
+        fnResult = '';
     });
 
     describe('spy', function() {
-        beforeEach(function() {
-            mockito4js.spy(object);
+        describe('on object', function() {
+            it('should add an isSpy attribute to the object', function() {
+                expect(object.isSpy).toBe(true);
+            });
+
+            it('should add an invocations object to the object', function() {
+                expect(object.invocations instanceof Object).toBe(true);
+            });
+
+            it('should replace all functions of the object with mock functions that register invocations', function() {
+                object.functionOne();
+                object.functionTwo();
+
+                expect(object.invocations['functionOne'].length).toBe(1);
+                expect(object.invocations['functionTwo'].length).toBe(1);
+            });
         });
 
-        it('should add an isSpy attribute to the object', function() {
-            expect(object.isSpy).toBe(true);
+        describe('on function', function() {
+            it('should add an isSpy attribute to the function', function() {
+                expect(fn.isSpy).toBe(true);
+            });
+
+            it('should add an invocations object to the function', function() {
+                expect(fn.invocations instanceof Object).toBe(true);
+            });
+
+            it('should call and register the original function', function() {
+                fn();
+
+                expect(fnResult).toBe('result');
+                expect(fn.invocations['self'].length).toBe(1);
+            });
         });
 
-        it('should add an invocations object to the object', function() {
-            expect(object.invocations instanceof Object).toBe(true);
-        });
-
-        it('should replace all functions of the object with mock functions that register invocations', function() {
-            object.functionOne();
-            object.functionTwo();
-
-            expect(object.invocations['functionOne'].length).toBe(1);
-            expect(object.invocations['functionTwo'].length).toBe(1);
-        });
     });
 
     describe('verify', function() {
-        beforeEach(function() {
-            mockito4js.spy(object);
+        describe('on object spy', function() {
+            it("should wrap the given spy in a Verify object exposing all the objects public functions", function() {
+                var actual = mockito4js.verify(object, mockito4js.once());
+
+                expect(actual.functionOne instanceof Function).toBe(true);
+                expect(actual.functionTwo instanceof Function).toBe(true);
+            });
+
+            it('should call the verifier verify method with the correct function name and actual invocation count', function() {
+                var verifierSpy = mockito4js.spy(mockito4js.once());
+                mockito4js.doNothing().when(verifierSpy).verify();
+                object.functionOne('argumentOne');
+
+                mockito4js.verify(object, verifierSpy).functionOne('argumentOne');
+
+                mockito4js.verify(verifierSpy, mockito4js.once()).verify('functionOne', 1);
+            });
+
+            it('should not throw an error if arguments of function call are of given type when any is used', function() {
+                var verifierSpy = mockito4js.spy(mockito4js.once());
+                object.functionOne('argumentOne');
+
+                mockito4js.verify(object, verifierSpy).functionOne(mockito4js.any('string'));
+            });
+
+            it('should throw an error if arguments of function call are of given type when any is used', function() {
+                var verifier = mockito4js.once();
+                object.functionOne(0);
+
+                expect(function() {
+                    mockito4js.verify(object, verifier).functionOne(mockito4js.any('string'))
+                }).toThrow(new Error('Number of invocations of "functionOne" does not match the expected amount of ' + verifier.invocationCount + '.' +
+                ' Actual number of invocations is 0'));
+            });
         });
 
-        it("should wrap the given spy in a Verify object exposing all the objects public functions", function() {
-            var actual = mockito4js.verify(object, mockito4js.once());
+        describe('on function spy', function() {
+            it("should wrap the given spy in a Verify object exposing a wasCalled and wasCalledWith method", function() {
+                var actual = mockito4js.verify(fn, mockito4js.once());
 
-            expect(actual.functionOne instanceof Function).toBe(true);
-            expect(actual.functionTwo instanceof Function).toBe(true);
-        });
+                expect(actual.wasCalled instanceof Function).toBe(true);
+                expect(actual.wasCalledWith instanceof Function).toBe(true);
+            });
 
-        it('should call the verifier verify method with the correct function name and actual invocation count', function() {
-            var verifierSpy = mockito4js.spy(mockito4js.once());
-            mockito4js.doNothing().when(verifierSpy).verify();
-            object.functionOne('argumentOne');
+            it('should call the verifier verify method with the correct function name and actual invocation count', function() {
+                var verifierSpy = mockito4js.spy(mockito4js.once());
+                mockito4js.doNothing().when(verifierSpy).verify();
+                fn('argumentOne');
 
-            mockito4js.verify(object, verifierSpy).functionOne('argumentOne');
+                mockito4js.verify(fn, verifierSpy).wasCalledWith('argumentOne');
 
-            mockito4js.verify(verifierSpy, mockito4js.once()).verify('functionOne', 1);
-        });
+                mockito4js.verify(verifierSpy, mockito4js.once()).verify('self', 1);
+            });
 
-        it('should not throw an error if arguments of function call are of given type when any is used', function() {
-            var verifierSpy = mockito4js.spy(mockito4js.once());
-            object.functionOne('argumentOne');
+            it('should not throw an error if arguments of function call are of given type when any is used', function() {
+                var verifierSpy = mockito4js.spy(mockito4js.once());
+                fn('argumentOne');
 
-            mockito4js.verify(object, verifierSpy).functionOne(mockito4js.any('string'));
-        });
+                mockito4js.verify(fn, verifierSpy).wasCalledWith(mockito4js.any('string'));
+            });
 
-        it('should throw an error if arguments of function call are of given type when any is used', function() {
-            var verifier = mockito4js.once();
-            object.functionOne(0);
+            it('should throw an error if arguments of function call are of given type when any is used', function() {
+                var verifier = mockito4js.once();
+                fn(0);
 
-            expect(function() {
-                mockito4js.verify(object, verifier).functionOne(mockito4js.any('string'))
-            }).toThrow(new Error('Number of invocations of "functionOne" does not match the expected amount of ' + verifier.invocationCount + '.' +
-            ' Actual number of invocations is 0'));
+                expect(function() {
+                    mockito4js.verify(fn, verifier).wasCalledWith(mockito4js.any('string'))
+                }).toThrow(new Error('Number of invocations of "self" does not match the expected amount of ' + verifier.invocationCount + '.' +
+                ' Actual number of invocations is 0'));
+            });
         });
     });
 
