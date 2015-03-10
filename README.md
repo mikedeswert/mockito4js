@@ -22,11 +22,9 @@ mockito4js.globalize();
 
 ### spy
 
-Modifies and returns the given **Object** so that certain function calls can be verified.
+Modifies and returns the given **Object** or **Function** so that certain function calls can be verified.
 
-*Currently this function only supports Objects. Support for Functions might be added in the future.*
-
-var objectSpy = mockito4js.spy(**[Object]**);
+var objectSpy = mockito4js.spy(**[Object | Function]**);
 
 ### verify
 
@@ -61,7 +59,7 @@ It can be used either with the **mockito4js.verify()** or the **"doMethods"**.
 
 mockito4js.verify([spy], [Verifier]).funcitonToVerify(**mockito4js.any([ArgumentType | 'argumentType'])**);
 
-mockito4js.doReturn([return value]).when([Object | spy]).functionToMock(**mockito4js.any([ArgumentType | 'argumentType'])**);
+mockito4js.doReturn([return value]).when([spy]).functionToMock(**mockito4js.any([ArgumentType | 'argumentType'])**);
 
    *Ex.*
    
@@ -81,29 +79,29 @@ mockito4js.doReturn([return value]).when([Object | spy]).functionToMock(**mockit
 
 Returns the **[return value]** when **functionToMock** is called.
 
-mockito4js.doReturn(**[return value]**).when(**[Object | spy]**)**.functionToMock()**;
+mockito4js.doReturn(**[return value]**).when(**[spy]**)**.functionToMock()**;
 
 Return the **[return value]** when property with **[propertyName]** is accessed.
 
-mockito4js.doReturn(**[return value]**).when(**[Object | spy]**).readsProperty(**[propertyName]**)
+mockito4js.doReturn(**[return value]**).when(**[spy]**).readsProperty(**[propertyName]**)
 
 ### doNothing
 
 Replaces the **functionToMock** with a function that does nothing.
 
-mockito4js.doNothing().when(**[Object | spy]**)**.functionToMock()**;
+mockito4js.doNothing().when(**[spy]**)**.functionToMock()**;
 
 ### doThrow
 
 Throws the given **Error** when **functionToMock** is called.
 
-mockito4js.doThrow(**[Error]**).when(**[Object | spy]**)**.functionToMock()**;
+mockito4js.doThrow(**[Error]**).when(**[spy]**)**.functionToMock()**;
 
 ### doFire
 
 Fires an event with the given **eventName** on the given **DOM element** when **functionToMock** is called.
 
-mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[Object | spy]**)**.functionToMock()**;
+mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[spy]**)**.functionToMock()**;
 
 ## License
 
