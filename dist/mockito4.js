@@ -10,7 +10,7 @@ var getMockito4jsBuilder = function() {
                 mockito4jsBuilder.Any(mockito4js);
                 mockito4jsBuilder.Do(mockito4js);
                 mockito4jsBuilder.Globalize(mockito4js);
-//runmdnfqmsjdfmklsdf
+
                 return mockito4js;
             }
         };
