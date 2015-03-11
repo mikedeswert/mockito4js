@@ -33,7 +33,10 @@ If no arguments are passed to the **functionToVerify** then all invocations to t
 If arguments are passed to the **functionToVerify**, then only invocations with those arguments in that specific order are counted.  
 Verify throws an error when its conditions are not satisfied and thus fails the test it is used in.
 
-mockito4js.verify(**[spy]**, **[Verifier]**)**.funcitonToVerify([arguments])**
+mockito4js.verify(**[object spy]**, **[Verifier]**)**.funcitonToVerify([arguments])**
+
+mockito4js.verify(**[function spy]**, **[Verifier]**)**.wasCalled()**  
+mockito4js.verify(**[function spy]**, **[Verifier]**)**.wasCalledWith([arguments])**
 
 #### verifiers
 * mockito4js.never() 
@@ -77,31 +80,51 @@ mockito4js.doReturn([return value]).when([spy]).functionToMock(**mockito4js.any(
 
 ### doReturn
 
-Returns the **[return value]** when **functionToMock** is called.
+Returns the **[return value]** when **functionToMock** is called with given **arguments**.
 
-mockito4js.doReturn(**[return value]**).when(**[spy]**)**.functionToMock()**;
+mockito4js.doReturn(**[return value]**).when(**[object spy]**)**.functionToMock([arguments])**;
 
 Return the **[return value]** when property with **[propertyName]** is accessed.
 
-mockito4js.doReturn(**[return value]**).when(**[spy]**).readsProperty(**[propertyName]**)
+mockito4js.doReturn(**[return value]**).when(**[object spy]**).readsProperty(**[propertyName]**)
+
+For functions:
+
+mockito4js.doReturn(**[return value]**).when(**[function spy]**)**.isCalled()**  
+mockito4js.doReturn(**[return value]**).when(**[function spy]**)**.isCalledWith([arguments])**
 
 ### doNothing
 
-Replaces the **functionToMock** with a function that does nothing.
+Replaces the **functionToMock** with a function that does nothing when it is called with given **arguments**.
 
-mockito4js.doNothing().when(**[spy]**)**.functionToMock()**;
+mockito4js.doNothing().when(**[object spy]**)**.functionToMock([arguments])**;
+
+For functions:
+
+mockito4js.doNothing().when(**[function spy]**)**.isCalled()**  
+mockito4js.doNothing().when(**[function spy]**)**.isCalledWith([arguments])**
 
 ### doThrow
 
-Throws the given **Error** when **functionToMock** is called.
+Throws the given **Error** when **functionToMock** is called with given **arguments**.
 
-mockito4js.doThrow(**[Error]**).when(**[spy]**)**.functionToMock()**;
+mockito4js.doThrow(**[Error]**).when(**[object spy]**)**.functionToMock([arguments])**;
+
+For functions:
+
+mockito4js.doThrow(**[Error]**).when(**[function spy]**)**.isCalled()**  
+mockito4js.doThrow(**[Error]**).when(**[function spy]**)**.isCalledWith([arguments])**
 
 ### doFire
 
-Fires an event with the given **eventName** on the given **DOM element** when **functionToMock** is called.
+Fires an event with the given **eventName** on the given **DOM element** when **functionToMock** is called with given **arguments**.
 
-mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[spy]**)**.functionToMock()**;
+mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[object spy]**)**.functionToMock([arguments])**;
+
+For functions:
+
+mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[function spy]**)**.isCalled()**  
+mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[function spy]**)**.isCalledWith([arguments])**
 
 ## License
 
