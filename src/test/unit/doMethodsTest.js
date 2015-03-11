@@ -62,6 +62,14 @@ describe('mockito4js', function () {
 
                 expect(actual).toBe(undefined);
             });
+
+            it('should not call the mock function given arguments passed to function and no given arguments', function() {
+                mockito4js.doReturn('return value').when(object).functionOne();
+
+                var actual = object.functionOne('some argument');
+
+                expect(actual).toBe(undefined);
+            });
         });
 
         describe('given function spy', function() {
@@ -107,6 +115,14 @@ describe('mockito4js', function () {
 
                 expect(actual).toBe(undefined);
                 expect(fnResult).toBe('result');
+            });
+
+            it('should not call the mock function given arguments passed to function and no given arguments', function() {
+                mockito4js.doReturn('return value').when(fn).isCalled();
+
+                var actual = fn('some argument');
+
+                expect(actual).toBe(undefined);
             });
 
             it('should call the mock function given no arguments and isCalled is used', function() {
@@ -201,7 +217,7 @@ describe('mockito4js', function () {
             expect(fnResult).toBe('');
         });
 
-        it('should return given value when function on given object spy is called', function() {
+        it('should do nothing given value when function on given object spy is called', function() {
             mockito4js.doNothing().when(object).functionOne();
 
             var actual = object.functionOne();
