@@ -18,6 +18,20 @@ getMockito4jsBuilder().Util = function(mockito4js) {
         }
     };
 
+    mockito4js.util.extend = function(child) {
+        return {
+            from: function(parent) {
+                var inheritedChild = function() {
+                    parent.apply(this, arguments);
+                    child.apply(this, arguments);
+                };
+                inheritedChild.prototype = parent.prototype;
+
+                return inheritedChild;
+            }
+        }
+    };
+
     function FunctionFactory() {
         this.createMockFunction = function(argumentsToVerify, realFunction, mockFunction) {
             return function () {
@@ -89,6 +103,5 @@ getMockito4jsBuilder().Util = function(mockito4js) {
             }
             return false;
         }
-
     }
 };
