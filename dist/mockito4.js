@@ -78,50 +78,37 @@ getMockito4jsBuilder().Do = function(mockito4js) {
     };
 
     var MockBuilder = function (execution) {
-        this.when = function (object) {
-            if (!object.isSpy) {
-                throw new Error('Argument passed to when is not a spy. Use mockito4js.spy() to create one.');
-            }
-
-            if (typeof object == 'function') {
-                return new MockFunction(object, execution);
-            }
-
-            return new MockObject(object, execution);
+        this.execution = execution;
+        this.mockObjectImplementation = MockObject;
+    };
+    MockBuilder.prototype.when = function(object) {
+        if (!object.isSpy) {
+            throw new Error('Argument passed to when is not a spy. Use mockito4js.spy() to create one.');
         }
+
+        if (typeof object == 'function') {
+            return new MockFunction(object, this.execution);
+        }
+
+        return new this.mockObjectImplementation(object, this.execution);
     };
 
-    var DoReturnMockBuilder = function (execution) {
-        MockBuilder.call(this, execution);
-
-        this.when = function (object) {
-            if (!object.isSpy) {
-                throw new Error('Argument passed to when is not a spy. Use mockito4js.spy() to create one.');
-            }
-
-            if (typeof object == 'function') {
-                return new MockFunction(object, execution);
-            }
-
-            return new DoReturnMockObject(object, execution);
-        }
+    var DoReturnMockBuilder = function () {
+        this.mockObjectImplementation = DoReturnMockObject;
     };
+    DoReturnMockBuilder = mockito4js.util.extend(DoReturnMockBuilder).from(MockBuilder);
 
     var MockFunction = function (fn, execution) {
         this.isCalled = function () {
-            fn.execution = mockito4js.util.functionFactory.createMockFunction(
-                [],
-                fn.execution,
-                mockito4js.util.functionFactory.createInvocationCountingFunction({
-                    object: fn,
-                    property: 'self',
-                    functionToReplace: execution
-                })
-            );
+            fn.execution = createMockFunction([]);
         };
         this.isCalledWith = function () {
-            fn.execution = mockito4js.util.functionFactory.createMockFunction(
-                arguments,
+            fn.execution = createMockFunction(arguments);
+        };
+
+        function createMockFunction(argumentsToVerify) {
+            return mockito4js.util.functionFactory.createMockFunction(
+                argumentsToVerify,
                 fn.execution,
                 mockito4js.util.functionFactory.createInvocationCountingFunction({
                     object: fn,
@@ -129,7 +116,7 @@ getMockito4jsBuilder().Do = function(mockito4js) {
                     functionToReplace: execution
                 })
             );
-        };
+        }
     };
 
     var MockObject = function (object, execution) {
@@ -144,8 +131,6 @@ getMockito4jsBuilder().Do = function(mockito4js) {
     };
 
     var DoReturnMockObject = function (object, execution) {
-        MockObject.call(this, object, execution);
-
         this.readsProperty = function (propertyName) {
             if (typeof object[propertyName] == 'function') {
                 throw new Error('Argument passed to readsProperty can not be the name of a function. Use when(object).nameOfFunction() instead.')
@@ -153,8 +138,8 @@ getMockito4jsBuilder().Do = function(mockito4js) {
 
             object[propertyName] = execution();
         };
-
     };
+    DoReturnMockObject = mockito4js.util.extend(DoReturnMockObject).from(MockObject);
 
     function MockEvent(name) {
         var event;
@@ -401,14 +386,12 @@ getMockito4jsBuilder().Verify = function (mockito4js) {
     AtMost = mockito4js.util.extend(AtMost).from(Verification);
 
     var Verifier = function() {};
-
     Verifier.prototype.createAdditionalArguments = function (verifyArguments, verification) {
         return {
             verifyArguments: verifyArguments,
             verification: verification
         }
     };
-
     Verifier.prototype.createVerifyFunctionArguments = function (spy, verification, verifyArguments) {
         return {
             object: spy,
