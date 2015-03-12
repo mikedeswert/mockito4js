@@ -18,8 +18,8 @@ module.exports = function (config) {
         },
         port: 9010,
         colors: true,
-        autoWatch: true,
+        autoWatch: false,
         browsers: ['PhantomJS'],
-        singleRun: false
+        singleRun: true
     });
 };
