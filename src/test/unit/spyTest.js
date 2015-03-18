@@ -35,6 +35,13 @@ describe('Spy module', function() {
                 expect(objectSpy.invocations['functionOne'].length).toBe(1);
                 expect(objectSpy.invocations['functionTwo'].length).toBe(1);
             });
+
+            it('should not replace all functions of the object if object is already a spy', function() {
+                var mockito4jsUtilsSpy = mockito4js.spy(mockito4js.util);
+                mockito4js.spy(objectSpy);
+
+                mockito4js.verify(mockito4jsUtilsSpy, mockito4js.never()).replaceFunctions(objectSpy, objectSpy, mockito4js.any(Function));
+            });
         });
 
         describe('on function', function() {
