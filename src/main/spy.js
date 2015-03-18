@@ -7,7 +7,11 @@ getMockito4jsBuilder().Spy = function(mockito4js) {
 
     mockito4js.reset = function(spy) {
         if(spy.isSpy) {
-            spy.invocations = {};
+            for(var property in spy.invocations) {
+                if(spy.invocations.hasOwnProperty(property)) {
+                    spy.invocations[property] = [];
+                }
+            }
             return;
         }
 
