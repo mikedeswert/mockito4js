@@ -5,6 +5,15 @@ getMockito4jsBuilder().Spy = function(mockito4js) {
         return spyFactory.createSpy(object);
     };
 
+    mockito4js.reset = function(spy) {
+        if(spy.isSpy) {
+            spy.invocations = {};
+            return;
+        }
+
+        throw new Error('Object or function passed to reset is not a spy. Use mockito4js.spy() to create one.');
+    };
+
     function SpyFactory() {
         this.createSpy = function(object) {
             if(typeof object == 'function') {

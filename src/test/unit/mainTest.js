@@ -20,45 +20,29 @@ describe('mockito4js', function () {
         fnResult = '';
     });
 
-    describe('spy', function() {
-        describe('on object', function() {
-            it('should add an isSpy attribute to the object', function() {
-                expect(object.isSpy).toBe(true);
-            });
-
-            it('should add an invocations object to the object', function() {
-                expect(object.invocations instanceof Object).toBe(true);
-            });
-
-            it('should replace all functions of the object with mock functions that register invocations', function() {
-                object.functionOne();
-                object.functionTwo();
-
-                expect(object.invocations['functionOne'].length).toBe(1);
-                expect(object.invocations['functionTwo'].length).toBe(1);
-            });
-        });
-
-        describe('on function', function() {
-            it('should add an isSpy attribute to the function', function() {
-                expect(fn.isSpy).toBe(true);
-            });
-
-            it('should add an invocations object to the function', function() {
-                expect(fn.invocations instanceof Object).toBe(true);
-            });
-
-            it('should call and register the original function', function() {
-                fn();
-
-                expect(fnResult).toBe('result');
-                expect(fn.invocations['self'].length).toBe(1);
-            });
-        });
-
-    });
-
     describe('verify', function() {
+        it('should throw an error given verifier is undefined', function() {
+            expect(function() {
+                mockito4js.verify(object).functionOne('argumentOne');
+            }).toThrow(new Error('No verifier passed to verify method. Use one of the following verifiers:\n' +
+                                 'mockito4js.never()\n' +
+                                 'mockito4js.once()\n' +
+                                 'mockito4js.times()\n' +
+                                 'mockito4js.atLeast()\n' +
+                                 'mockito4js.atMost()\n'));
+        });
+
+        it('should throw throw an error given verifier is null', function() {
+            expect(function() {
+                mockito4js.verify(object, null).functionOne('argumentOne');
+            }).toThrow(new Error('No verifier passed to verify method. Use one of the following verifiers:\n' +
+                                 'mockito4js.never()\n' +
+                                 'mockito4js.once()\n' +
+                                 'mockito4js.times()\n' +
+                                 'mockito4js.atLeast()\n' +
+                                 'mockito4js.atMost()\n'));
+        });
+
         describe('on object spy', function() {
             it("should wrap the given spy in a Verify object exposing all the objects public functions", function() {
                 var actual = mockito4js.verify(object, mockito4js.once());

@@ -179,6 +179,15 @@ getMockito4jsBuilder().Spy = function(mockito4js) {
         return spyFactory.createSpy(object);
     };
 
+    mockito4js.reset = function(spy) {
+        if(spy.isSpy) {
+            spy.invocations = {};
+            return;
+        }
+
+        throw new Error('Object or function passed to reset is not a spy. Use mockito4js.spy() to create one.');
+    };
+
     function SpyFactory() {
         this.createSpy = function(object) {
             if(typeof object == 'function') {
@@ -272,11 +281,13 @@ getMockito4jsBuilder().Util = function(mockito4js) {
             function getInvocationsWithArguments(object, functionName, expectedArguments) {
                 var invocations = [];
 
-                object.invocations[functionName].forEach(function (invocation) {
-                    if (expectedArguments.length == 0 || mockito4js.util.array.containsAllArguments(invocation.actualArguments, expectedArguments)) {
-                        invocations.push(invocation);
-                    }
-                });
+                if (object.invocations[functionName] != undefined) {
+                    object.invocations[functionName].forEach(function (invocation) {
+                        if (expectedArguments.length == 0 || mockito4js.util.array.containsAllArguments(invocation.actualArguments, expectedArguments)) {
+                            invocations.push(invocation);
+                        }
+                    });
+                }
 
                 return invocations;
             }
@@ -322,6 +333,15 @@ getMockito4jsBuilder().Util = function(mockito4js) {
 };
 getMockito4jsBuilder().Verify = function (mockito4js) {
     mockito4js.verify = function (spy, verification) {
+        if(verification == undefined || verification == null) {
+            throw new Error('No verifier passed to verify method. Use one of the following verifiers:\n' +
+                            'mockito4js.never()\n' +
+                            'mockito4js.once()\n' +
+                            'mockito4js.times()\n' +
+                            'mockito4js.atLeast()\n' +
+                            'mockito4js.atMost()\n')
+        }
+
         if (!spy.isSpy) {
             throw new Error('Verify cannot be called on an object that is not a spy. Use mockito4js.spy() to create a spy object.');
         }

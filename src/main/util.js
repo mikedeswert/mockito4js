@@ -57,11 +57,13 @@ getMockito4jsBuilder().Util = function(mockito4js) {
             function getInvocationsWithArguments(object, functionName, expectedArguments) {
                 var invocations = [];
 
-                object.invocations[functionName].forEach(function (invocation) {
-                    if (expectedArguments.length == 0 || mockito4js.util.array.containsAllArguments(invocation.actualArguments, expectedArguments)) {
-                        invocations.push(invocation);
-                    }
-                });
+                if (object.invocations[functionName] != undefined) {
+                    object.invocations[functionName].forEach(function (invocation) {
+                        if (expectedArguments.length == 0 || mockito4js.util.array.containsAllArguments(invocation.actualArguments, expectedArguments)) {
+                            invocations.push(invocation);
+                        }
+                    });
+                }
 
                 return invocations;
             }

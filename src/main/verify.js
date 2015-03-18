@@ -1,5 +1,14 @@
 getMockito4jsBuilder().Verify = function (mockito4js) {
     mockito4js.verify = function (spy, verification) {
+        if(verification == undefined || verification == null) {
+            throw new Error('No verifier passed to verify method. Use one of the following verifiers:\n' +
+                            'mockito4js.never()\n' +
+                            'mockito4js.once()\n' +
+                            'mockito4js.times()\n' +
+                            'mockito4js.atLeast()\n' +
+                            'mockito4js.atMost()\n')
+        }
+
         if (!spy.isSpy) {
             throw new Error('Verify cannot be called on an object that is not a spy. Use mockito4js.spy() to create a spy object.');
         }
