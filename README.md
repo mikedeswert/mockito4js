@@ -20,9 +20,15 @@ mockito4js.globalize();
 
 **mockito4js.verify**(spy, **mockito4js.once**()).functionToVerify() **=>** **verify**(spy, **once**()).functionToVerify();
 
+### reset
+
+Reset all invocation counts of a given spy to zero.
+
+mockito4js.reset(**[object spy | function spy]**)
+
 ### spy
 
-Modifies and returns the given **Object** or **Function** so that certain function calls can be verified.
+Modifies and returns the given **Object** or **Function** so that certain function calls can be verified. Creating a spy now also implicitly calls mockito4js.reset() if the object was already a spy.
 
 var objectSpy = mockito4js.spy(**[Object | Function]**);
 
