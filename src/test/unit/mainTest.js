@@ -2,9 +2,8 @@
 
 describe('mockito4js', function () {
     var object,
-        fn,
-        fnResult;
-    
+        fn;
+
     beforeEach(function () {
         object = {
             functionOne: function() {},
@@ -12,12 +11,10 @@ describe('mockito4js', function () {
         };
         object = mockito4js.spy(object);
 
-        fn = function() {
-            fnResult = 'result';
-        };
+        fn = function() {};
+        fn.functionOne = function() {};
         fn = mockito4js.spy(fn);
 
-        fnResult = '';
     });
 
     describe('verify', function() {
@@ -87,7 +84,7 @@ describe('mockito4js', function () {
                 expect(actual.wasCalledWith instanceof Function).toBe(true);
             });
 
-            it('should call the verifier verify method with the correct function name and actual invocation count', function() {
+            it('should call the verifier verify method with the correct function name and actual invocation count given function spy', function() {
                 var verifierSpy = mockito4js.spy(mockito4js.once());
                 mockito4js.doNothing().when(verifierSpy).verify();
                 fn('argumentOne');
@@ -97,20 +94,45 @@ describe('mockito4js', function () {
                 mockito4js.verify(verifierSpy, mockito4js.once()).verify('self', 1);
             });
 
-            it('should not throw an error if arguments of function call are of given type when any is used', function() {
-                var verifierSpy = mockito4js.spy(mockito4js.once());
+            it('should not throw an error if arguments of function spy call are of given type when any is used', function() {
                 fn('argumentOne');
 
-                mockito4js.verify(fn, verifierSpy).wasCalledWith(mockito4js.any('string'));
+                mockito4js.verify(fn, mockito4js.once()).wasCalledWith(mockito4js.any('string'));
             });
 
-            it('should throw an error if arguments of function call are of given type when any is used', function() {
+            it('should throw an error if arguments of function spy call are of given type when any is used', function() {
                 var verifier = mockito4js.once();
                 fn(0);
 
                 expect(function() {
                     mockito4js.verify(fn, verifier).wasCalledWith(mockito4js.any('string'))
                 }).toThrow(new Error('Number of invocations of "self" does not match the expected amount of ' + verifier.invocationCount + '.' +
+                ' Actual number of invocations is 0'));
+            });
+
+            it('should call the verifier verify method with the correct function name and actual invocation count given function on function spy', function() {
+                var verifierSpy = mockito4js.spy(mockito4js.once());
+                mockito4js.doNothing().when(verifierSpy).verify();
+                fn.functionOne('argumentOne');
+
+                mockito4js.verify(fn, verifierSpy).functionOne('argumentOne');
+
+                mockito4js.verify(verifierSpy, mockito4js.once()).verify('functionOne', 1);
+            });
+
+            it('should not throw an error if arguments of function on function spy call are of given type when any is used', function() {
+                fn.functionOne('argumentOne');
+
+                mockito4js.verify(fn, mockito4js.once()).functionOne(mockito4js.any('string'));
+            });
+
+            it('should throw an error if arguments of function on function spy call are of given type when any is used', function() {
+                var verifier = mockito4js.once();
+                fn.functionOne(0);
+
+                expect(function() {
+                    mockito4js.verify(fn, verifier).functionOne(mockito4js.any('string'))
+                }).toThrow(new Error('Number of invocations of "functionOne" does not match the expected amount of ' + verifier.invocationCount + '.' +
                 ' Actual number of invocations is 0'));
             });
         });

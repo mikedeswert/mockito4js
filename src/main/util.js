@@ -45,11 +45,10 @@ getMockito4jsBuilder().Util = function(mockito4js) {
         };
 
         this.createInvocationCountingFunction = function(functionArguments) {
-            var invocations = (functionArguments.source instanceof Function) ? functionArguments.target.invocations : functionArguments.source.invocations;
-            invocations[functionArguments.property] = [];
+            getInvocations(functionArguments)[functionArguments.property] = [];
 
             return function () {
-                invocations[functionArguments.property].push({actualArguments: arguments});
+                getInvocations(functionArguments)[functionArguments.property].push({actualArguments: arguments});
 
                 return functionArguments.functionToReplace.apply(this, arguments);
             }
@@ -72,11 +71,18 @@ getMockito4jsBuilder().Util = function(mockito4js) {
 
             return function () {
                 var argumentsToVerify = (functionArguments.additionalArguments.verifyArguments) ? arguments : [];
-                var object = (functionArguments.source instanceof Function) ? functionArguments.target : functionArguments.source;
-                var invocationCount = getInvocationsWithArguments(object, functionArguments.property, argumentsToVerify).length;
+                var invocationCount = getInvocationsWithArguments(functionArguments.source, functionArguments.property, argumentsToVerify).length;
                 functionArguments.additionalArguments.verification.verify(functionArguments.property, invocationCount);
             }
         };
+
+        function getInvocations(functionArguments) {
+            if (functionArguments.source instanceof Function && functionArguments.target.invocations != undefined) {
+                return functionArguments.target.invocations;
+            } else {
+                return functionArguments.source.invocations;
+            }
+        }
     }
 
     function ArrayUtil() {

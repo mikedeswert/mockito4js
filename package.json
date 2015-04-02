@@ -1,7 +1,7 @@
 {
   "name": "mockito4js",
   "version": "v1.0.8-beta",
-  "description": "A small JavaScript library that can be used to mock functions and spy on objects. The syntax is heavily inspired by the Mockito library used for testing Java applications.",
+  "description": "A JavaScript API that can be used to spy on functions and objects using a syntax inspired by Mockito.",
   "main": "src/main/mockito4.js",
   "dependencies": {},
   "devDependencies": {

@@ -5,7 +5,7 @@
   "authors": [
     "Mike De Swert"
   ],
-  "description": "A small JavaScript library that can be used to mock functions and spy on objects. The syntax is heavily inspired by the Mockito library used for testing Java applications.",
+  "description": "A JavaScript API that can be used to spy on functions and objects using a syntax inspired by Mockito.",
   "main": "dist/mockito4.js",
   "moduleType": [
     "globals"

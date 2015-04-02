@@ -17,7 +17,7 @@ getMockito4jsBuilder().Verify = function (mockito4js) {
             return new FunctionVerifier(spy, verification);
         }
 
-        return new ObjectVerifier(spy, verification);
+        return new Verifier(spy, verification);
     };
 
     mockito4js.times = function (numberOfTimes) {
@@ -72,7 +72,9 @@ getMockito4jsBuilder().Verify = function (mockito4js) {
     };
     AtMost = mockito4js.util.extend(AtMost).from(Verification);
 
-    var Verifier = function() {};
+    var Verifier = function(spy, verification) {
+        mockito4js.util.replaceFunctions(this, spy, mockito4js.util.functionFactory.createVerifyFunction, this.createAdditionalArguments(true, verification));
+    };
     Verifier.prototype.createAdditionalArguments = function (verifyArguments, verification) {
         return {
             verifyArguments: verifyArguments,
@@ -102,9 +104,4 @@ getMockito4jsBuilder().Verify = function (mockito4js) {
         };
     };
     FunctionVerifier = mockito4js.util.extend(FunctionVerifier).from(Verifier);
-
-    var ObjectVerifier = function (spy, verification) {
-        mockito4js.util.replaceFunctions(this, spy, mockito4js.util.functionFactory.createVerifyFunction, this.createAdditionalArguments(true, verification));
-    };
-    ObjectVerifier = mockito4js.util.extend(ObjectVerifier).from(Verifier);
 };

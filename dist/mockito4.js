@@ -283,11 +283,10 @@ getMockito4jsBuilder().Util = function(mockito4js) {
         };
 
         this.createInvocationCountingFunction = function(functionArguments) {
-            var invocations = (functionArguments.source instanceof Function) ? functionArguments.target.invocations : functionArguments.source.invocations;
-            invocations[functionArguments.property] = [];
+            getInvocations(functionArguments)[functionArguments.property] = [];
 
             return function () {
-                invocations[functionArguments.property].push({actualArguments: arguments});
+                getInvocations(functionArguments)[functionArguments.property].push({actualArguments: arguments});
 
                 return functionArguments.functionToReplace.apply(this, arguments);
             }
@@ -310,11 +309,18 @@ getMockito4jsBuilder().Util = function(mockito4js) {
 
             return function () {
                 var argumentsToVerify = (functionArguments.additionalArguments.verifyArguments) ? arguments : [];
-                var object = (functionArguments.source instanceof Function) ? functionArguments.target : functionArguments.source;
-                var invocationCount = getInvocationsWithArguments(object, functionArguments.property, argumentsToVerify).length;
+                var invocationCount = getInvocationsWithArguments(functionArguments.source, functionArguments.property, argumentsToVerify).length;
                 functionArguments.additionalArguments.verification.verify(functionArguments.property, invocationCount);
             }
         };
+
+        function getInvocations(functionArguments) {
+            if (functionArguments.source instanceof Function && functionArguments.target.invocations != undefined) {
+                return functionArguments.target.invocations;
+            } else {
+                return functionArguments.source.invocations;
+            }
+        }
     }
 
     function ArrayUtil() {
@@ -367,7 +373,7 @@ getMockito4jsBuilder().Verify = function (mockito4js) {
             return new FunctionVerifier(spy, verification);
         }
 
-        return new ObjectVerifier(spy, verification);
+        return new Verifier(spy, verification);
     };
 
     mockito4js.times = function (numberOfTimes) {
@@ -422,7 +428,9 @@ getMockito4jsBuilder().Verify = function (mockito4js) {
     };
     AtMost = mockito4js.util.extend(AtMost).from(Verification);
 
-    var Verifier = function() {};
+    var Verifier = function(spy, verification) {
+        mockito4js.util.replaceFunctions(this, spy, mockito4js.util.functionFactory.createVerifyFunction, this.createAdditionalArguments(true, verification));
+    };
     Verifier.prototype.createAdditionalArguments = function (verifyArguments, verification) {
         return {
             verifyArguments: verifyArguments,
@@ -453,9 +461,9 @@ getMockito4jsBuilder().Verify = function (mockito4js) {
     };
     FunctionVerifier = mockito4js.util.extend(FunctionVerifier).from(Verifier);
 
-    var ObjectVerifier = function (spy, verification) {
-        mockito4js.util.replaceFunctions(this, spy, mockito4js.util.functionFactory.createVerifyFunction, this.createAdditionalArguments(true, verification));
-    };
-    ObjectVerifier = mockito4js.util.extend(ObjectVerifier).from(Verifier);
+    //var ObjectVerifier = function (spy, verification) {
+    //    mockito4js.util.replaceFunctions(this, spy, mockito4js.util.functionFactory.createVerifyFunction, this.createAdditionalArguments(true, verification));
+    //};
+    //ObjectVerifier = mockito4js.util.extend(ObjectVerifier).from(Verifier);
 };
 var mockito4js = getMockito4jsBuilder().build(getMockito4jsBuilder());

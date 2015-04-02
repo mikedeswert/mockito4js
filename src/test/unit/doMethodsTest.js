@@ -2,23 +2,27 @@
 
 describe('mockito4js', function () {
     var object,
-        fn,
-        fnResult;
+        fn;
 
     beforeEach(function () {
         object = {
-            functionOne: function() {},
-            functionTwo: function() {},
+            functionOne: function() {
+                return 'originalResult'
+            },
+            functionTwo: function() {
+                return 'originalResult'
+            },
             propertyOne: 'propertyValue'
         };
         object = mockito4js.spy(object);
 
         fn = function() {
-            fnResult = 'result';
+            return 'originalResult'
+        };
+        fn.functionOne = function() {
+            return 'originalResult'
         };
         fn = mockito4js.spy(fn);
-
-        fnResult = '';
     });
 
     describe('every do method', function() {
@@ -60,7 +64,7 @@ describe('mockito4js', function () {
 
                 var actual = object.functionOne('some argument');
 
-                expect(actual).toBe(undefined);
+                expect(actual).toBe('originalResult');
             });
 
             it('should not call the mock function given arguments passed to function and no given arguments', function() {
@@ -68,7 +72,7 @@ describe('mockito4js', function () {
 
                 var actual = object.functionOne('some argument');
 
-                expect(actual).toBe(undefined);
+                expect(actual).toBe('originalResult');
             });
         });
 
@@ -82,12 +86,11 @@ describe('mockito4js', function () {
             });
 
             it('should call the mock function given arguments passed to function call is null and match given arguments', function() {
-                mockito4js.doReturn('return value').when(object).functionOne(null);
+                mockito4js.doReturn('return value').when(fn).isCalledWith(null);
 
-                var actual = object.functionOne(null);
+                var actual = fn(null);
 
                 expect(actual).toBe('return value');
-                expect(fnResult).toBe('');
             });
 
             it('should call the mock function given arguments passed to function call is undefined and match given arguments', function() {
@@ -96,7 +99,6 @@ describe('mockito4js', function () {
                 var actual = fn(undefined);
 
                 expect(actual).toBe('return value');
-                expect(fnResult).toBe('');
             });
 
             it('should call the mock function given type of arguments passed to function call match given any', function() {
@@ -105,7 +107,6 @@ describe('mockito4js', function () {
                 var actual = fn('random argument');
 
                 expect(actual).toBe('return value');
-                expect(fnResult).toBe('');
             });
 
             it('should not call the mock function given arguments passed to function call do not match given arguments', function() {
@@ -113,8 +114,7 @@ describe('mockito4js', function () {
 
                 var actual = fn('some argument');
 
-                expect(actual).toBe(undefined);
-                expect(fnResult).toBe('result');
+                expect(actual).toBe('originalResult');
             });
 
             it('should not call the mock function given arguments passed to function and no given arguments', function() {
@@ -122,7 +122,7 @@ describe('mockito4js', function () {
 
                 var actual = fn('some argument');
 
-                expect(actual).toBe(undefined);
+                expect(actual).toBe('originalResult');
             });
 
             it('should call the mock function given no arguments and isCalled is used', function() {
@@ -131,7 +131,6 @@ describe('mockito4js', function () {
                 var actual = fn();
 
                 expect(actual).toBe('return value');
-                expect(fnResult).toBe('');
             });
         });
 
@@ -190,13 +189,28 @@ describe('mockito4js', function () {
                 var actual = fn();
 
                 expect(actual).toBe('return value');
-                expect(fnResult).toBe('');
+            });
+
+            it('should return given value when function on given function spy is called', function() {
+                mockito4js.doReturn('return value').when(fn).functionOne();
+
+                var actual = fn.functionOne();
+
+                expect(actual).toBe('return value');
             });
 
             it('should return a mock without a readsProperty method when when() method is called', function() {
                 var actual = mockito4js.doReturn('return value').when(fn);
 
                 expect(actual.readsProperty).toBe(undefined);
+            });
+
+            it('should return given value when function is called', function() {
+                mockito4js.doReturn('return value').when(fn).functionOne();
+
+                var actual = fn.functionOne();
+
+                expect(actual).toBe('return value');
             });
         });
     });
@@ -208,13 +222,20 @@ describe('mockito4js', function () {
             }
         });
 
-        it('should do nothing when function on given function spy is called', function() {
+        it('should do nothing when given function spy is called', function() {
             mockito4js.doNothing().when(fn).isCalled();
 
             var actual = fn();
 
             expect(actual).toBe(undefined);
-            expect(fnResult).toBe('');
+        });
+
+        it('should do nothing when function on given function spy is called', function() {
+            mockito4js.doNothing().when(fn).functionOne();
+
+            var actual = fn.functionOne();
+
+            expect(actual).toBe(undefined);
         });
 
         it('should do nothing given value when function on given object spy is called', function() {
@@ -227,11 +248,16 @@ describe('mockito4js', function () {
     });
 
     describe('doThrow', function() {
-        it('should throw error when function on given function spy is called', function() {
+        it('should throw error when given function spy is called', function() {
             mockito4js.doThrow(new Error('Some error')).when(fn).isCalled();
 
             expect(fn).toThrow(new Error('Some error'));
-            expect(fnResult).toBe('');
+        });
+
+        it('should throw error when function on given function spy is called', function() {
+            mockito4js.doThrow(new Error('Some error')).when(fn).functionOne();
+
+            expect(fn.functionOne).toThrow(new Error('Some error'));
         });
 
         it('should throw error when function on given object spy is called', function() {
@@ -259,7 +285,14 @@ describe('mockito4js', function () {
             fn();
 
             expect(handlerResult).toBe('event fired');
-            expect(fnResult).toBe('');
+        });
+
+        it('should fire an event on given DOM element error when function on given function spy is called', function() {
+            mockito4js.doFire('click').on(domElement).when(fn).functionOne();
+
+            fn.functionOne();
+
+            expect(handlerResult).toBe('event fired');
         });
 
         it('should fire an event on given DOM element error when function on given object spy is called', function() {
