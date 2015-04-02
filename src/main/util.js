@@ -3,15 +3,16 @@ getMockito4jsBuilder().Util = function(mockito4js) {
     mockito4js.util.functionFactory = new FunctionFactory();
     mockito4js.util.array = new ArrayUtil();
 
-    mockito4js.util.replaceFunctions = function(target, object, replacementFunction, additionalArguments) {
-        for (var property in object) {
+    mockito4js.util.replaceFunctions = function(target, source, replacementFunction, additionalArguments) {
+        for (var property in source) {
             //noinspection JSUnfilteredForInLoop
-            if (typeof object[property] == 'function') {
+            if (typeof source[property] == 'function') {
                 //noinspection JSUnfilteredForInLoop
                 target[property] = replacementFunction({
-                    object: object,
+                    target: target,
+                    source: source,
                     property: property,
-                    functionToReplace: object[property],
+                    functionToReplace: source[property],
                     additionalArguments: additionalArguments
                 });
             }
@@ -44,10 +45,11 @@ getMockito4jsBuilder().Util = function(mockito4js) {
         };
 
         this.createInvocationCountingFunction = function(functionArguments) {
-            functionArguments.object.invocations[functionArguments.property] = [];
+            var invocations = (functionArguments.source instanceof Function) ? functionArguments.target.invocations : functionArguments.source.invocations;
+            invocations[functionArguments.property] = [];
 
             return function () {
-                functionArguments.object.invocations[functionArguments.property].push({actualArguments: arguments});
+                invocations[functionArguments.property].push({actualArguments: arguments});
 
                 return functionArguments.functionToReplace.apply(this, arguments);
             }
@@ -70,7 +72,8 @@ getMockito4jsBuilder().Util = function(mockito4js) {
 
             return function () {
                 var argumentsToVerify = (functionArguments.additionalArguments.verifyArguments) ? arguments : [];
-                var invocationCount = getInvocationsWithArguments(functionArguments.object, functionArguments.property, argumentsToVerify).length;
+                var object = (functionArguments.source instanceof Function) ? functionArguments.target : functionArguments.source;
+                var invocationCount = getInvocationsWithArguments(object, functionArguments.property, argumentsToVerify).length;
                 functionArguments.additionalArguments.verification.verify(functionArguments.property, invocationCount);
             }
         };

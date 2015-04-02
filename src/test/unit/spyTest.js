@@ -13,6 +13,7 @@ describe('Spy module', function() {
         var fn = function() {
             fnResult = 'result';
         };
+        fn.functionOne = function() {};
         functionSpy = mockito4js.spy(fn);
 
         fnResult = '';
@@ -58,6 +59,12 @@ describe('Spy module', function() {
 
                 expect(fnResult).toBe('result');
                 expect(functionSpy.invocations['self'].length).toBe(1);
+            });
+
+            it('should replace all functions of the function with mock functions that register invocations', function() {
+                functionSpy.functionOne();
+
+                expect(functionSpy.invocations['functionOne'].length).toBe(1);
             });
         });
 

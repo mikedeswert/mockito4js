@@ -37,6 +37,7 @@ getMockito4jsBuilder().Spy = function(mockito4js) {
                 return spyFunction.execution.apply(this, arguments);
             };
             spyFunction.invocations = {};
+            mockito4js.util.replaceFunctions(spyFunction, fn, mockito4js.util.functionFactory.createInvocationCountingFunction);
             spyFunction.isSpy = true;
             spyFunction.execution = fn;
 
@@ -50,7 +51,7 @@ getMockito4jsBuilder().Spy = function(mockito4js) {
             }
 
             object.invocations = {};
-            mockito4js.util.replaceFunctions(object, object,mockito4js.util.functionFactory.createInvocationCountingFunction);
+            mockito4js.util.replaceFunctions(object, object, mockito4js.util.functionFactory.createInvocationCountingFunction);
             object.isSpy = true;
 
             return object;

@@ -49,7 +49,7 @@ getMockito4jsBuilder().Do = function(mockito4js) {
             throw new Error('Argument passed to when is not a spy. Use mockito4js.spy() to create one.');
         }
 
-        if (typeof object == 'function') {
+        if (object  instanceof Function) {
             return new MockFunction(object, this.execution);
         }
 
@@ -61,33 +61,13 @@ getMockito4jsBuilder().Do = function(mockito4js) {
     };
     DoReturnMockBuilder = mockito4js.util.extend(DoReturnMockBuilder).from(MockBuilder);
 
-    var MockFunction = function (fn, execution) {
-        this.isCalled = function () {
-            fn.execution = createMockFunction([]);
-        };
-        this.isCalledWith = function () {
-            fn.execution = createMockFunction(arguments);
-        };
-
-        function createMockFunction(argumentsToVerify) {
-            return mockito4js.util.functionFactory.createMockFunction(
-                argumentsToVerify,
-                fn.execution,
-                mockito4js.util.functionFactory.createInvocationCountingFunction({
-                    object: fn,
-                    property: 'self',
-                    functionToReplace: execution
-                })
-            );
-        }
-    };
 
     var MockObject = function (object, execution) {
         mockito4js.util.replaceFunctions(this, object, function (functionArguments) {
             functionArguments.functionToReplace = execution;
             return function () {
-                functionArguments.object[functionArguments.property] = mockito4js.util.functionFactory.createMockFunction(arguments,
-                    functionArguments.object[functionArguments.property],
+                functionArguments.source[functionArguments.property] = mockito4js.util.functionFactory.createMockFunction(arguments,
+                    functionArguments.source[functionArguments.property],
                     mockito4js.util.functionFactory.createInvocationCountingFunction(functionArguments));
             };
         });
@@ -103,6 +83,30 @@ getMockito4jsBuilder().Do = function(mockito4js) {
         };
     };
     DoReturnMockObject = mockito4js.util.extend(DoReturnMockObject).from(MockObject);
+
+    var MockFunction = function (fn, execution) {
+        this.isCalled = function () {
+            fn.execution = createMockFunction([]);
+        };
+        this.isCalledWith = function () {
+            fn.execution = createMockFunction(arguments);
+        };
+
+        function createMockFunction(argumentsToVerify) {
+            return mockito4js.util.functionFactory.createMockFunction(
+                argumentsToVerify,
+                fn.execution,
+                mockito4js.util.functionFactory.createInvocationCountingFunction({
+                    target: fn,
+                    source: fn,
+                    property: 'self',
+                    functionToReplace: execution
+                })
+            );
+        }
+    };
+    MockFunction = mockito4js.util.extend(MockFunction).from(MockObject);
+
 
     function MockEvent(name) {
         var event;

@@ -81,7 +81,8 @@ getMockito4jsBuilder().Verify = function (mockito4js) {
     };
     Verifier.prototype.createVerifyFunctionArguments = function (spy, verification, verifyArguments) {
         return {
-            object: spy,
+            target: spy,
+            source: spy,
             property: 'self',
             functionToReplace: null,
             additionalArguments: Verifier.prototype.createAdditionalArguments(verifyArguments, verification)
