@@ -460,10 +460,5 @@ getMockito4jsBuilder().Verify = function (mockito4js) {
         };
     };
     FunctionVerifier = mockito4js.util.extend(FunctionVerifier).from(Verifier);
-
-    //var ObjectVerifier = function (spy, verification) {
-    //    mockito4js.util.replaceFunctions(this, spy, mockito4js.util.functionFactory.createVerifyFunction, this.createAdditionalArguments(true, verification));
-    //};
-    //ObjectVerifier = mockito4js.util.extend(ObjectVerifier).from(Verifier);
 };
 var mockito4js = getMockito4jsBuilder().build(getMockito4jsBuilder());
