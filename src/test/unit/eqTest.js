@@ -169,6 +169,29 @@ describe('Eq module', function() {
 
                 expect(actual).toBe(false);
             });
+
+            it('should return true given x and y both contain a circular reference', function() {
+                var parent = {child: {parent: {}}, key:'value'};
+                parent.child.parent = parent;
+
+                var otherParent = {child: {parent: {}}, key:'value'};
+                otherParent.child.parent = otherParent;
+
+                var actual = mockito4js.eq(parent).matches(otherParent);
+
+                expect(actual).toBe(true);
+            });
+
+            it('should return false given x contains a circular reference but y does not', function() {
+                var parent = {child: {parent: {}}, key:'value'};
+                parent.child.parent = parent;
+
+                var otherParent = {child: {parent: {}}, key:'value'};
+
+                var actual = mockito4js.eq(parent).matches(otherParent);
+
+                expect(actual).toBe(false);
+            });
         });
     });
 });

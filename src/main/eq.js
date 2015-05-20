@@ -1,4 +1,4 @@
-getMockito4jsBuilder().Eq = function(mockito4js) {
+getMockito4jsBuilder().Eq = function (mockito4js) {
     mockito4js.eq = function (value) {
         return new Eq(value);
     };
@@ -7,22 +7,18 @@ getMockito4jsBuilder().Eq = function(mockito4js) {
         this.value = value;
 
         this.matches = function (argument) {
-            try {
-                return deepCompare(this.value, argument);
-            } catch (error) {
-                return false;
-            }
+            return deepCompare(this.value, argument);
         };
     }
 
-    function deepCompare (x, y) {
+    function deepCompare(x, y) {
         var leftChain = [],
             rightChain = [];
 
         return compareObjects(x, y);
 
-        function compareObjects (x, y) {
-            if(areBothNaN(x, y)) return true;
+        function compareObjects(x, y) {
+            if (areBothNaN(x, y)) return true;
 
             if (x === y) {
                 return true;
@@ -36,11 +32,11 @@ getMockito4jsBuilder().Eq = function(mockito4js) {
                 return x.toString() === y.toString();
             }
 
-            if(!arePrototypesEqual(x, y)) return false;
+            if (!arePrototypesEqual(x, y)) return false;
 
-            if(haveCircularReferences(x, y)) return false;
+            if(isCircularReference(x, y)) return true;
 
-            if(!isSubset(x, y)) return false;
+            if (!isSubset(x, y)) return false;
 
             return arePropertiesEqual(x, y);
         }
@@ -49,8 +45,8 @@ getMockito4jsBuilder().Eq = function(mockito4js) {
             return isNaN(x) && isNaN(y) && typeof x === 'number' && typeof y === 'number';
         }
 
-        function haveCircularReferences(x, y) {
-            return leftChain.indexOf(x) > -1 || rightChain.indexOf(y) > -1;
+        function isCircularReference(x, y) {
+            return leftChain.indexOf(x) > -1 && rightChain.indexOf(y) > -1;
         }
 
         function isSubset(x, y) {
@@ -98,7 +94,7 @@ getMockito4jsBuilder().Eq = function(mockito4js) {
                         leftChain.push(x);
                         rightChain.push(y);
 
-                        if (!compareObjects (x[p], y[p])) {
+                        if (!compareObjects(x[p], y[p])) {
                             return false;
                         }
 
