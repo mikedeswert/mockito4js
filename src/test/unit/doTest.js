@@ -1,6 +1,6 @@
 "use strict";
 
-describe('mockito4js', function () {
+describe('Do module', function () {
     var object,
         fn;
 
@@ -59,6 +59,14 @@ describe('mockito4js', function () {
                 expect(actual).toBe('return value');
             });
 
+            it('should call the mock function given type of arguments passed to function call match given eq', function() {
+                mockito4js.doReturn('return value').when(object).functionOne(mockito4js.eq({key: 'value'}));
+
+                var actual = object.functionOne({key: 'value'});
+
+                expect(actual).toBe('return value');
+            });
+
             it('should not call the mock function given arguments passed to function call do not match given arguments', function() {
                 mockito4js.doReturn('return value').when(object).functionOne('another argument');
 
@@ -105,6 +113,14 @@ describe('mockito4js', function () {
                 mockito4js.doReturn('return value').when(fn).isCalledWith(mockito4js.any('string'));
 
                 var actual = fn('random argument');
+
+                expect(actual).toBe('return value');
+            });
+
+            it('should call the mock function given type of arguments passed to function call match given eq', function() {
+                mockito4js.doReturn('return value').when(fn).isCalledWith(mockito4js.eq({key: 'value'}));
+
+                var actual = fn({key: 'value'});
 
                 expect(actual).toBe('return value');
             });
