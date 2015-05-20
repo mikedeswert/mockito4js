@@ -84,6 +84,38 @@ mockito4js.doReturn([return value]).when([spy]).functionToMock(**mockito4js.any(
    *spy.someFunction('string');  
    mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any('string'));* **=> No Error**
 
+### eq
+
+Eq can be used when you want to compare arguments by value and not by reference.
+It can be used either with the **mockito4js.verify()** or the **"doMethods"**.
+
+mockito4js.verify([spy], [Verifier]).funcitonToVerify(**mockito4js.eq([argument])**);
+
+mockito4js.doReturn([return value]).when([spy]).functionToMock(**mockito4js.eq(argument)**);
+
+   *Ex.*
+   
+   Objects  
+   *spy.someFunction({key: 'value'});  
+   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq({key:'value'}));* **=> No error**
+   
+   *spy.someFunction({key: 'value'});  
+   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq({key: 'other value'}));* **=> Error**
+   
+   Arrays  
+   *spy.someFunction(['value']);  
+   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(['value']));* **=> No error**
+   
+   *spy.someFunction(['value']);  
+   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(['other value']));* **=> Error**
+   
+   Functions  
+   *spy.someFunction(function() { return true; });  
+   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(function() { return true; }));* **=> No error**
+   
+   *spy.someFunction(function() { return true; });  
+   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(function() { return false; }));* **=> Error**
+
 ### doReturn
 
 Returns the **[return value]** when **functionToMock** is called with given **arguments**.
