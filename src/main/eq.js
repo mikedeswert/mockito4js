@@ -38,7 +38,7 @@ getMockito4jsBuilder().Eq = function(mockito4js) {
 
             if(!arePrototypesEqual(x, y)) return false;
 
-            if(haveCircularReferences(x, y)) return true;
+            if(haveCircularReferences(x, y)) return false;
 
             if(!isSubset(x, y)) return false;
 
