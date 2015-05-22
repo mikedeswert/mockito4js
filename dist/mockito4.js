@@ -9,6 +9,7 @@ var getMockito4jsBuilder = function() {
                 mockito4jsBuilder.Verify(mockito4js);
                 mockito4jsBuilder.Any(mockito4js);
                 mockito4jsBuilder.Eq(mockito4js);
+                mockito4jsBuilder.Capture(mockito4js);
                 mockito4jsBuilder.Do(mockito4js);
                 mockito4jsBuilder.Globalize(mockito4js);
 
@@ -150,6 +151,28 @@ getMockito4jsBuilder().Eq = function (mockito4js) {
 
             return true;
         }
+    }
+};
+getMockito4jsBuilder().Capture = function (mockito4js) {
+    mockito4js.createArgumentCaptor = function() {
+        return new ArgumentCaptor();
+    };
+
+    function ArgumentCaptor() {
+        this.values = [];
+
+        this.matches = function(argument) {
+            this.values.push(argument);
+            return true;
+        };
+
+        this.getValue = function() {
+            if(this.values.length == 0) {
+                throw new Error('No arguments captured!');
+            }
+
+            return mockito4js.util.array.getLastElement(this.values);
+        };
     }
 };
 getMockito4jsBuilder().Do = function(mockito4js) {
@@ -468,6 +491,18 @@ getMockito4jsBuilder().Util = function(mockito4js) {
                 }
             }
             return false;
+        };
+
+        this.getLastElement = function(array) {
+            if(isArrayValid(array)) {
+                return undefined;
+            }
+
+            return array[array.length - 1];
+        };
+
+        function isArrayValid(array) {
+            return array == undefined || array == null || array.length == 0;
         }
     }
 };

@@ -67,6 +67,16 @@ describe('Do module', function () {
                 expect(actual).toBe('return value');
             });
 
+            it('should capture the given value when argument captor is used', function() {
+                var argumentCaptor = mockito4js.createArgumentCaptor();
+                mockito4js.doReturn('return value').when(object).functionOne(argumentCaptor);
+
+                var actual = object.functionOne({key: 'value'});
+
+                expect(actual).toBe('return value');
+                expect(argumentCaptor.getValue()).toEqual({key: 'value'});
+            });
+
             it('should not call the mock function given arguments passed to function call do not match given arguments', function() {
                 mockito4js.doReturn('return value').when(object).functionOne('another argument');
 
@@ -123,6 +133,16 @@ describe('Do module', function () {
                 var actual = fn({key: 'value'});
 
                 expect(actual).toBe('return value');
+            });
+
+            it('should capture the given value when argument captor is used', function() {
+                var argumentCaptor = mockito4js.createArgumentCaptor();
+                mockito4js.doReturn('return value').when(fn).isCalledWith(argumentCaptor);
+
+                var actual = fn({key: 'value'});
+
+                expect(actual).toBe('return value');
+                expect(argumentCaptor.getValue()).toEqual({key: 'value'});
             });
 
             it('should not call the mock function given arguments passed to function call do not match given arguments', function() {

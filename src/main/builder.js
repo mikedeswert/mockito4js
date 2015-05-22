@@ -9,6 +9,7 @@ var getMockito4jsBuilder = function() {
                 mockito4jsBuilder.Verify(mockito4js);
                 mockito4jsBuilder.Any(mockito4js);
                 mockito4jsBuilder.Eq(mockito4js);
+                mockito4jsBuilder.Capture(mockito4js);
                 mockito4jsBuilder.Do(mockito4js);
                 mockito4jsBuilder.Globalize(mockito4js);
 
