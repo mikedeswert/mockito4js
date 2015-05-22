@@ -1,3 +1,5 @@
+"use strict";
+
 describe('Capture module', function() {
     describe('createArgumentCaptor', function() {
         it('should return an argument captor', function() {

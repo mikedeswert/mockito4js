@@ -1,3 +1,5 @@
+"use strict";
+
 describe('Util module', function() {
     describe('array', function() {
         describe('containsAllArguments', function() {
