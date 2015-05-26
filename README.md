@@ -144,6 +144,28 @@ spy.someFunction(function() { return true; });
 mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(function() { return false; })); // => Error
 ```
 
+### Argument Captors
+
+Argument captors can be used when you want to do assertions on an argument passed to a function.
+It can be used either with the **mockito4js.verify()** or the **"doMethods"**.  
+Calling verify with an argument captor will never throw an error **unless** the number of arguments passed to the actual method are not the same.  
+The **getValue()** of the argument captor will always return the last value it captured.
+
+```js
+// Verify
+var argumentCaptor = mockito4js.createArgumentCaptor();
+mockito4js.verify(spy, mockito4js.once()).functionToVerify(argumentCaptor);
+
+spy.functionToVerify("argument of verify");
+alert(argumentCaptor.getValue()) // => "argument of verify"
+
+// Do
+mockito4js.doReturn("return value").when(spy).functionToVerify(argumentCaptor);
+
+spy.functionToVerify("argument of do");
+alert(argumentCaptor.getValue()) // => "argument of do"
+```
+
 ### doReturn
 
 Returns the **return value** when **functionToMock** is called with given **arguments**.
