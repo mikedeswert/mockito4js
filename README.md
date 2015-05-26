@@ -52,8 +52,8 @@ var spy = mockito4js.spy(fn);
 ### verify
 
 Verifies the number of **functionToVerify** invocations of the given **spy** based on the given **Verifier**.  
-If no arguments are passed to the **functionToVerify** then all invocations to the function are counted.  
-If arguments are passed to the **functionToVerify**, then only invocations with those arguments in that specific order are counted.  
+If no arguments are passed to **functionToVerify** then all invocations to the function are counted.  
+If arguments are passed to **functionToVerify**, then only invocations with those arguments in that specific order are counted.  
 Verify throws an error when its conditions are not satisfied and thus fails the test it is used in.
 
 ```js
@@ -89,7 +89,7 @@ Any can be used when you don't care about the specific value of an argument but 
 It can be used either with the **mockito4js.verify()** or the **"doMethods"**.
 
 ```js
-mockito4js.verify(spy, mockito4js.once()).functionToVerify(mockito4js.any(String)**);
+mockito4js.verify(spy, mockito4js.once()).functionToVerify(mockito4js.any(String));
 
 mockito4js.doReturn("return value").when(spy).functionToMock(mockito4js.any('string'));
 ```
