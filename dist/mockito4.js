@@ -472,7 +472,7 @@ getMockito4jsBuilder().Util = function(mockito4js) {
             for (var i = 0; i < expectedArguments.length; i++) {
                 var expectedArgument = expectedArguments[i];
 
-                if (!this.arrayContains(actualArguments, expectedArgument)) {
+                if (!this.valuesMatch(actualArguments[i], expectedArgument)) {
                     return false;
                 }
             }
@@ -491,6 +491,14 @@ getMockito4jsBuilder().Util = function(mockito4js) {
                 }
             }
             return false;
+        };
+
+        this.valuesMatch = function(actualValue, expectedValue) {
+            if (expectedValue != undefined && expectedValue != null && expectedValue.matches != undefined && expectedValue.matches(actualValue)) {
+                return true
+            }
+
+            return actualValue == expectedValue;
         };
 
         this.getLastElement = function(array) {

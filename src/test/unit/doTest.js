@@ -85,6 +85,14 @@ describe('Do module', function () {
                 expect(actual).toBe('originalResult');
             });
 
+            it('should not call the mock function given arguments passed to function call are not in correct order', function() {
+                mockito4js.doReturn('return value').when(object).functionOne('argument', 'another argument');
+
+                var actual = object.functionOne('another argument', 'argument');
+
+                expect(actual).toBe('originalResult');
+            });
+
             it('should not call the mock function given arguments passed to function and no given arguments', function() {
                 mockito4js.doReturn('return value').when(object).functionOne();
 

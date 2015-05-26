@@ -21,10 +21,10 @@ describe('Util module', function() {
                 expect(actual).toBe(true);
             });
 
-            it('should return true given array 2 contains elements of array 1 in a different order', function() {
+            it('should return false given array 2 contains elements of array 1 in a different order', function() {
                 var actual = mockito4js.util.array.containsAllArguments([1, 2], [2, 1]);
 
-                expect(actual).toBe(true);
+                expect(actual).toBe(false);
             });
         });
 
@@ -96,6 +96,59 @@ describe('Util module', function() {
                 var array = ['other element'];
 
                 var actual = mockito4js.util.array.arrayContains(array,element);
+
+                expect(actual).toBe(false);
+            });
+        });
+
+        describe('valuesMatch', function() {
+            it('should return true given actual value equals expected value', function() {
+                var element = {key: 'value'};
+                var actual = mockito4js.util.array.valuesMatch(element, element);
+
+                expect(actual).toBe(true);
+            });
+
+            it('should return true given actual value and expected value are undefined', function() {
+                var actual = mockito4js.util.array.valuesMatch(undefined, undefined);
+
+                expect(actual).toBe(true);
+            });
+
+            it('should return true given actual value and expected value are null', function() {
+                var actual = mockito4js.util.array.valuesMatch(null, null);
+
+                expect(actual).toBe(true);
+            });
+
+            it('should return false given actual value is not equal to expected value', function() {
+                var actual = mockito4js.util.array.valuesMatch("actual value", "expected value");
+
+                expect(actual).toBe(false);
+            });
+
+            it('should return true given expected value matches actual value', function() {
+                var element = {
+                    key: 'value',
+                    matches: function() {
+                        return true;
+                    }
+                };
+
+                var actual = mockito4js.util.array.valuesMatch('other element',element);
+
+                expect(actual).toBe(true);
+            });
+
+            it('should return false given expected value does not match actual value', function() {
+                var element = {
+                    key: 'value',
+                    matches: function() {
+                        return false;
+                    }
+                };
+
+                var actual = mockito4js.util.array.arrayContains('other element',element);
 
                 expect(actual).toBe(false);
             });

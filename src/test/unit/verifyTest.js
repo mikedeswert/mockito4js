@@ -40,6 +40,31 @@ describe('Verify module', function() {
             'mockito4js.atMost()\n'));
         });
 
+        it('should throw an error when number of invocations is not correct', function () {
+            object.functionOne("argumentOne", "argumentTwo");
+            expect(
+                function () {
+                    mockito4js.verify(object, mockito4js.once()).functionOne("argumentOne");
+                }
+            ).toThrow(new Error('Number of invocations of "functionOne" does not match the expected amount of ' + mockito4js.once().invocationCount + '.' +
+                ' Actual number of invocations is 0'));
+        });
+
+        it('should throw an error when arguments of invocations are not in correct order', function () {
+            object.functionOne("argumentOne", "argumentTwo");
+            expect(
+                function () {
+                    mockito4js.verify(object, mockito4js.once()).functionOne("argumentTwo", "argumentOne");
+                }
+            ).toThrow(new Error('Number of invocations of "functionOne" does not match the expected amount of ' + mockito4js.once().invocationCount + '.' +
+                ' Actual number of invocations is 0'));
+        });
+
+        it('should not throw an error when arguments are correct', function () {
+            object.functionOne("argumentOne", "argumentTwo");
+            mockito4js.verify(object, mockito4js.once()).functionOne("argumentOne", "argumentTwo");
+        });
+
         describe('on object spy', function() {
             it("should wrap the given spy in a Verify object exposing all the objects public functions", function() {
                 var actual = mockito4js.verify(object, mockito4js.once());
