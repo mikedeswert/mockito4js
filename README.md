@@ -44,6 +44,9 @@ Modifies and returns the given **Object** or **Function** so that certain functi
 ```js
 var object = {};
 var spy = mockito4js.spy(object);
+
+var fn = function() {};
+var spy = mockito4js.spy(fn);
 ```
 
 ### verify
