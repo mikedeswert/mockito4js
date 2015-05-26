@@ -113,6 +113,18 @@ getMockito4jsBuilder().Util = function(mockito4js) {
                 }
             }
             return false;
+        };
+
+        this.getLastElement = function(array) {
+            if(isArrayValid(array)) {
+                return undefined;
+            }
+
+            return array[array.length - 1];
+        };
+
+        function isArrayValid(array) {
+            return array == undefined || array == null || array.length == 0;
         }
     }
 };

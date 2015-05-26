@@ -91,6 +91,15 @@ describe('Verify module', function() {
                 }).toThrow(new Error('Number of invocations of "functionOne" does not match the expected amount of ' + verifier.invocationCount + '.' +
                 ' Actual number of invocations is 0'));
             });
+
+            it('should capture the given value when argument captor is used', function() {
+                var argumentCaptor = mockito4js.createArgumentCaptor();
+                var verifierSpy = mockito4js.spy(mockito4js.once());
+                object.functionOne({key: 'value'});
+
+                mockito4js.verify(object, verifierSpy).functionOne(argumentCaptor);
+                expect(argumentCaptor.getValue()).toEqual({key: 'value'});
+            });
         });
 
         describe('on function spy', function() {
@@ -183,6 +192,14 @@ describe('Verify module', function() {
                     mockito4js.verify(fn, verifier).functionOne(mockito4js.eq({key: 'other value'}))
                 }).toThrow(new Error('Number of invocations of "functionOne" does not match the expected amount of ' + verifier.invocationCount + '.' +
                 ' Actual number of invocations is 0'));
+            });
+
+            it('should capture the value of the given argument when argumentCaptor is used', function() {
+                var argumentCaptor = mockito4js.createArgumentCaptor();
+                fn.functionOne({key: 'value'});
+
+                mockito4js.verify(fn, mockito4js.once()).functionOne(argumentCaptor);
+                expect(argumentCaptor.getValue()).toEqual({key: 'value'});
             });
         });
     });

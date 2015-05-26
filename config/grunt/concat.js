@@ -4,6 +4,7 @@ module.exports = {
             './src/main/builder.js',
             './src/main/any.js',
             './src/main/eq.js',
+            './src/main/capture.js',
             './src/main/do.js',
             './src/main/globalize.js',
             './src/main/spy.js',
