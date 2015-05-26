@@ -14,23 +14,37 @@ bower install mockito4js
 ### globalize
 
 If you're convinced that the mockito4js API will not conflict with other libraries then you can use the globalize function at the start of your tests.  
+
+```js
+mockito4js.globalize();
+```
+
 The globalize function puts the mockito4js functions on the global scope, thus increasing readability by removing the need to call the functions on the mockito4js object.
 
-mockito4js.globalize();
+```js
+mockito4js.verify(spy, mockito4js.once()).functionToVerify();
 
-**mockito4js.verify**(spy, **mockito4js.once**()).functionToVerify() **=>** **verify**(spy, **once**()).functionToVerify();
+// becomes
+
+verify(spy, once()).functionToVerify();
+```
 
 ### reset
 
 Reset all invocation counts of a given spy to zero.
 
-mockito4js.reset(**[object spy | function spy]**)
+```js
+mockito4js.reset(spy);
+```
 
 ### spy
 
 Modifies and returns the given **Object** or **Function** so that certain function calls can be verified. Creating a spy now also implicitly calls mockito4js.reset() if the object was already a spy.
 
-var objectSpy = mockito4js.spy(**[Object | Function]**);
+```js
+var object = {};
+var spy = mockito4js.spy(object);
+```
 
 ### verify
 
@@ -39,130 +53,151 @@ If no arguments are passed to the **functionToVerify** then all invocations to t
 If arguments are passed to the **functionToVerify**, then only invocations with those arguments in that specific order are counted.  
 Verify throws an error when its conditions are not satisfied and thus fails the test it is used in.
 
-mockito4js.verify(**[object spy]**, **[Verifier]**)**.funcitonToVerify([arguments])**
+```js
+mockito4js.verify(objectSpy, mockito4js.once()).functionToVerify("argument");
+```
 
-mockito4js.verify(**[function spy]**, **[Verifier]**)**.wasCalled()**  
-mockito4js.verify(**[function spy]**, **[Verifier]**)**.wasCalledWith([arguments])**
+```js
+mockito4js.verify(functionSpy, mockito4js.once()).wasCalled();  
+mockito4js.verify(functionSpy, mockito4js.once()).wasCalledWith("argument");;
+```
 
 #### verifiers
-* mockito4js.never() 
-   
-   *verifies if there were no invocations*
-* mockito4js.once() 
-   
-   *verifies that there was exactly one invocation*
-* mockito4js.times(**[expectedInvocationCount]**) 
-   
-   *verifies if number of invocations is equal to the expectedInvocationCount*
-* mockito4js.atLeast(**[expectedInvocationCount]**) 
-   
-   *verifies if number of invocations is equal to or greater than the expectedInvocationCount*
-* mockito4js.atMost(**[expectedInvocationCount]**) 
-   
-   *verifies if number of invocations is equal to or less than the expectedInvocationCount*
+```js
+mockito4js.never();
+// verifies that there were no invocations
+
+mockito4js.once();
+// verifies that there was exactly one invocation
+
+mockito4js.times(2);
+// verifies that the number of invocations is equal to the expected amount
+
+mockito4js.atLeast(1);
+// verifies that the number of invocations is equal to or greater than the expected amount
+
+mockito4js.atMost(2);
+// verifies that number of invocations is equal to or less than the expected amount
+```
 
 ### any
 
 Any can be used when you don't care about the specific value of an argument but do want to check its type.
 It can be used either with the **mockito4js.verify()** or the **"doMethods"**.
 
-mockito4js.verify([spy], [Verifier]).funcitonToVerify(**mockito4js.any([ArgumentType | 'argumentType'])**);
+```js
+mockito4js.verify(spy, mockito4js.once()).functionToVerify(mockito4js.any(String)**);
 
-mockito4js.doReturn([return value]).when([spy]).functionToMock(**mockito4js.any([ArgumentType | 'argumentType'])**);
+mockito4js.doReturn("return value").when(spy).functionToMock(mockito4js.any('string'));
+```
 
-   *Ex.*
+*Examples:*
+```js
+spy.someFunction(new String('string'));  
+mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any(String)); // => No error
+
+spy.someFunction('string');  
+mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any(String)); // => Error
    
-   *spy.someFunction(new String('string'));  
-   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any(String));* **=> No error**
+spy.someFunction(new String('string'));  
+mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any('string')); // => Error
    
-   *spy.someFunction('string');  
-   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any(String));* **=> Error**
-   
-   *spy.someFunction(new String('string'));  
-   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any('string'));* **=> Error**
-   
-   *spy.someFunction('string');  
-   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any('string'));* **=> No Error**
+spy.someFunction('string');  
+mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any('string')); // => No Error
+```
 
 ### eq
 
 Eq can be used when you want to compare arguments by value and not by reference.
 It can be used either with the **mockito4js.verify()** or the **"doMethods"**.
 
-mockito4js.verify([spy], [Verifier]).funcitonToVerify(**mockito4js.eq([argument])**);
+```js
+mockito4js.verify(spy, mockito4js.once()).functionToVerify(mockito4js.eq("argument"));
 
-mockito4js.doReturn([return value]).when([spy]).functionToMock(**mockito4js.eq(argument)**);
+mockito4js.doReturn("return value").when(spy).functionToMock(mockito4js.eq("argument"));
+```
 
-   *Ex.*
+*Examples:*
+```js   
+// Objects  
+spy.someFunction({key: 'value'});  
+mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq({key:'value'})); // => No error
    
-   Objects  
-   *spy.someFunction({key: 'value'});  
-   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq({key:'value'}));* **=> No error**
+spy.someFunction({key: 'value'});  
+mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq({key: 'other value'})); // => Error
+
+// Arrays  
+spy.someFunction(['value']);  
+mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(['value'])); // => No error
    
-   *spy.someFunction({key: 'value'});  
-   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq({key: 'other value'}));* **=> Error**
+spy.someFunction(['value']);  
+mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(['other value'])); // => Error
    
-   Arrays  
-   *spy.someFunction(['value']);  
-   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(['value']));* **=> No error**
+// Functions  
+spy.someFunction(function() { return true; });  
+mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(function() { return true; })); // => No error
    
-   *spy.someFunction(['value']);  
-   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(['other value']));* **=> Error**
-   
-   Functions  
-   *spy.someFunction(function() { return true; });  
-   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(function() { return true; }));* **=> No error**
-   
-   *spy.someFunction(function() { return true; });  
-   mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(function() { return false; }));* **=> Error**
+spy.someFunction(function() { return true; });  
+mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(function() { return false; })); // => Error
+```
 
 ### doReturn
 
-Returns the **[return value]** when **functionToMock** is called with given **arguments**.
+Returns the **return value** when **functionToMock** is called with given **arguments**.
 
-mockito4js.doReturn(**[return value]**).when(**[object spy]**)**.functionToMock([arguments])**;
+```js
+// For object spy
+mockito4js.doReturn("return value").when(spy).functionToMock("argument");
 
-Return the **[return value]** when property with **[propertyName]** is accessed.
+// For function spy
+mockito4js.doReturn("return value").when(spy).isCalled();  
+mockito4js.doReturn("return value").when(spy).isCalledWith("argument");
+```
 
-mockito4js.doReturn(**[return value]**).when(**[object spy]**).readsProperty(**[propertyName]**)
+Return the **return value** when property with **propertyName** is accessed on given object spy.
 
-For functions:
-
-mockito4js.doReturn(**[return value]**).when(**[function spy]**)**.isCalled()**  
-mockito4js.doReturn(**[return value]**).when(**[function spy]**)**.isCalledWith([arguments])**
+```js
+mockito4js.doReturn("return value").when(spy).readsProperty("propertyName");
+```
 
 ### doNothing
 
 Replaces the **functionToMock** with a function that does nothing when it is called with given **arguments**.
 
-mockito4js.doNothing().when(**[object spy]**)**.functionToMock([arguments])**;
+```js
+// For object spy
+mockito4js.doNothing().when(spy).functionToMock("argument");
 
-For functions:
-
-mockito4js.doNothing().when(**[function spy]**)**.isCalled()**  
-mockito4js.doNothing().when(**[function spy]**)**.isCalledWith([arguments])**
+// For function spy
+mockito4js.doNothing().when(spy).isCalled();  
+mockito4js.doNothing().when(spy).isCalledWith("argument");
+```
 
 ### doThrow
 
 Throws the given **Error** when **functionToMock** is called with given **arguments**.
 
-mockito4js.doThrow(**[Error]**).when(**[object spy]**)**.functionToMock([arguments])**;
+```js
+// For object spy
+mockito4js.doThrow(new Error("Oh no!")).when(spy).functionToMock("argument");
 
-For functions:
-
-mockito4js.doThrow(**[Error]**).when(**[function spy]**)**.isCalled()**  
-mockito4js.doThrow(**[Error]**).when(**[function spy]**)**.isCalledWith([arguments])**
+// For function spy
+mockito4js.doThrow(new Error("Oh no!")).when(spy).isCalled();  
+mockito4js.doThrow(new Error("Oh no!")).when(spy).isCalledWith("argument");
+```
 
 ### doFire
 
 Fires an event with the given **eventName** on the given **DOM element** when **functionToMock** is called with given **arguments**.
 
-mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[object spy]**)**.functionToMock([arguments])**;
+```js
+// For object spy
+mockito4js.doFire("onclick").on(domElement).when(spy).functionToMock("argument");
 
-For functions:
-
-mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[function spy]**)**.isCalled()**  
-mockito4js.doFire(**[eventName]**).on(**[DOM element]**).when(**[function spy]**)**.isCalledWith([arguments])**
+// For function spy
+mockito4js.doFire("onclick").on(domElement).when(spy).isCalled();  
+mockito4js.doFire("onclick").on(domElement).when(spy).isCalledWith("argument");
+```
 
 ## License
 
