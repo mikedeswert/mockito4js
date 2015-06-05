@@ -1,6 +1,6 @@
 {
   "name": "mockito4js",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "description": "A JavaScript API that can be used to spy on functions and objects using a syntax inspired by Mockito.",
   "main": "src/main/mockito4.js",
   "dependencies": {},
