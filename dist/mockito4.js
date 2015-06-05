@@ -182,8 +182,17 @@ getMockito4jsBuilder().Do = function(mockito4js) {
     };
 
     mockito4js.doReturn = function (returnValue) {
-        return new DoReturnMockBuilder(function () {
-            return returnValue;
+        var returnValues = mockito4js.util.array.convertArgumentsToArray(arguments);
+        return new MockBuilder(function () {
+            if(returnValues.length < 1) {
+                return undefined;
+            }
+
+            if(returnValues.length == 1) {
+                return returnValues[0];
+            }
+
+            return returnValues.shift();
         });
     };
 
@@ -233,12 +242,6 @@ getMockito4jsBuilder().Do = function(mockito4js) {
         return new this.mockObjectImplementation(object, this.execution);
     };
 
-    var DoReturnMockBuilder = function () {
-        this.mockObjectImplementation = DoReturnMockObject;
-    };
-    DoReturnMockBuilder = mockito4js.util.extend(DoReturnMockBuilder).from(MockBuilder);
-
-
     var MockObject = function (object, execution) {
         mockito4js.util.replaceFunctions(this, object, function (functionArguments) {
             functionArguments.functionToReplace = execution;
@@ -249,17 +252,6 @@ getMockito4jsBuilder().Do = function(mockito4js) {
             };
         });
     };
-
-    var DoReturnMockObject = function (object, execution) {
-        this.readsProperty = function (propertyName) {
-            if (typeof object[propertyName] == 'function') {
-                throw new Error('Argument passed to readsProperty can not be the name of a function. Use when(object).nameOfFunction() instead.')
-            }
-
-            object[propertyName] = execution();
-        };
-    };
-    DoReturnMockObject = mockito4js.util.extend(DoReturnMockObject).from(MockObject);
 
     var MockFunction = function (fn, execution) {
         this.isCalled = function () {
@@ -491,6 +483,10 @@ getMockito4jsBuilder().Util = function(mockito4js) {
                 }
             }
             return false;
+        };
+
+        this.convertArgumentsToArray = function(argumentsObject) {
+            return Array.prototype.slice.call(argumentsObject);
         };
 
         this.valuesMatch = function(actualValue, expectedValue) {

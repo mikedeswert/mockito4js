@@ -202,27 +202,23 @@ describe('Do module', function () {
                 expect(actual).toBe('return value');
             });
 
-            it('should return a mock with a readsProperty method when when() method is called', function() {
-                var actual = mockito4js.doReturn('return value').when(object);
+            it('should return the second given argument when function called a second time', function() {
+                mockito4js.doReturn('return value', 'second return value').when(object).functionOne();
 
-                expect(actual.readsProperty).not.toBe(undefined);
-                expect(typeof actual.readsProperty).toBe('function');
+                object.functionOne();
+                var actual = object.functionOne();
+
+                expect(actual).toBe('second return value');
             });
 
-            it('should return given value when property is accessed', function() {
-                mockito4js.doReturn('return value').when(object).readsProperty('propertyOne');
+            it('should return the second given argument when called a second time and multiple doReturns defined', function() {
+                mockito4js.doReturn('return value', 'second return value').when(object).functionOne();
+                mockito4js.doReturn('other return value', 'second other return value').when(object).functionTwo();
 
-                var actual = object.propertyOne;
-
-                expect(actual).toBe('return value');
-            });
-
-            it('should throw an error when property name passed to readsProperty is name of a function', function() {
-                var actual = mockito4js.doReturn('return value').when(object);
-
-                expect(function() {
-                    actual.readsProperty('functionOne');
-                }).toThrow(new Error('Argument passed to readsProperty can not be the name of a function. Use when(object).nameOfFunction() instead.'));
+                expect(object.functionOne()).toBe('return value');
+                expect(object.functionOne()).toBe('second return value');
+                expect(object.functionTwo()).toBe('other return value');
+                expect(object.functionTwo()).toBe('second other return value');
             });
         });
 
@@ -243,18 +239,31 @@ describe('Do module', function () {
                 expect(actual).toBe('return value');
             });
 
-            it('should return a mock without a readsProperty method when when() method is called', function() {
-                var actual = mockito4js.doReturn('return value').when(fn);
-
-                expect(actual.readsProperty).toBe(undefined);
-            });
-
             it('should return given value when function is called', function() {
                 mockito4js.doReturn('return value').when(fn).functionOne();
 
                 var actual = fn.functionOne();
 
                 expect(actual).toBe('return value');
+            });
+
+            it('should return the second given argument when function called a second time', function() {
+                mockito4js.doReturn('return value', 'second return value').when(fn).isCalled();
+
+                fn();
+                var actual = fn();
+
+                expect(actual).toBe('second return value');
+            });
+
+            it('should return the second given argument when called a second time and multiple doReturns defined', function() {
+                mockito4js.doReturn('return value', 'second return value').when(fn).isCalled();
+                mockito4js.doReturn('other return value', 'second other return value').when(fn).functionOne();
+
+                expect(fn()).toBe('return value');
+                expect(fn()).toBe('second return value');
+                expect(fn.functionOne()).toBe('other return value');
+                expect(fn.functionOne()).toBe('second other return value');
             });
         });
     });

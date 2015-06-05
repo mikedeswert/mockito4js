@@ -115,6 +115,10 @@ getMockito4jsBuilder().Util = function(mockito4js) {
             return false;
         };
 
+        this.convertArgumentsToArray = function(argumentsObject) {
+            return Array.prototype.slice.call(argumentsObject);
+        };
+
         this.valuesMatch = function(actualValue, expectedValue) {
             if (expectedValue != undefined && expectedValue != null && expectedValue.matches != undefined && expectedValue.matches(actualValue)) {
                 return true
