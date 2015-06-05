@@ -3,6 +3,23 @@ A JavaScript API that can be used to spy on functions and objects using a syntax
 
 [![Build Status](https://travis-ci.org/mikedeswert/mockito4js.png)](https://travis-ci.org/mikedeswert/mockito4js)
 
+**IMPORTANT NOTE** As of release **v1.2.0** the method **readsProperty()** is no longer available on the object returned by *doReturn().when()* 
+
+This was actually a silly feature as this:
+```js
+mockito4js.doReturn('return value').when(object).readsProperty('property');
+```
+could easily be replaced by the more readable code:
+```js
+object.property = 'return value';
+```
+The readsProperty() method would also have complicated the addition of future features and thus it was scrapped.
+
+Thanks for understanding.
+
+### New Features
+* doReturn() now supports multiple return values
+
 ## Installation
 
 ```shell
@@ -183,6 +200,16 @@ Return the **return value** when property with **propertyName** is accessed on g
 
 ```js
 mockito4js.doReturn("return value").when(spy).readsProperty("propertyName");
+```
+
+You can pass **multiple return values**. Every time **functionToMock** is called, it will return the next value given to doReturn.
+
+```js
+mockito4js.doReturn('return value', 'second return value').when(spy).functionToMock();
+
+spy.functionToMock(); // => returns 'return value'
+spy.functionToMock(); // => returns 'second return value'
+spy.functionToMock(); // => will keep returning 'second return value'
 ```
 
 ### doNothing
