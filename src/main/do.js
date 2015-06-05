@@ -10,6 +10,7 @@ getMockito4jsBuilder().Do = function(mockito4js) {
         });
     };
 
+
     mockito4js.doThrow = function (error) {
         if (!error instanceof Error) {
             throw new Error('Argument passed to doThrow is not an Error!');

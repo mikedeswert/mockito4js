@@ -8,7 +8,8 @@ module.exports = function (config) {
         ],
         frameworks: ['jasmine'],
         files: [
-            '../dist/mockito4.js',
+            '../dist/mockito4.min.js',
+            '../dist/mockito4.min.js.map',
             'test/unit/**/*.js'
         ],
         reporters: ['progress'],
