@@ -3,7 +3,7 @@
 module.exports = {
     options: {
         bump: false,
-        commitMessage: 'Release <%= version %>',
+        commitMessage: 'Release v<%= version %>',
         npm: false,
         tagName: 'v<%= version %>'
     }

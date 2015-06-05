@@ -5,7 +5,7 @@
     "Mike De Swert"
   ],
   "description": "A JavaScript API that can be used to spy on functions and objects using a syntax inspired by Mockito.",
-  "main": "dist/mockito4.js",
+  "main": "./dist/mockito4.min.js",
   "moduleType": [
     "globals"
   ],
