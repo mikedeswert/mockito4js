@@ -193,12 +193,6 @@ mockito4js.doReturn("return value").when(spy).isCalled();
 mockito4js.doReturn("return value").when(spy).isCalledWith("argument");
 ```
 
-Return the **return value** when property with **propertyName** is accessed on given object spy.
-
-```js
-mockito4js.doReturn("return value").when(spy).readsProperty("propertyName");
-```
-
 You can pass **multiple return values**. Every time **functionToMock** is called, it will return the next value given to doReturn.
 
 ```js
