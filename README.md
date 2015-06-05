@@ -17,9 +17,6 @@ The readsProperty() method would also have complicated the addition of future fe
 
 Thanks for understanding.
 
-### New Features
-* doReturn() now supports multiple return values
-
 ## Installation
 
 ```shell
