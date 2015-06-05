@@ -101,6 +101,17 @@ describe('Util module', function() {
             });
         });
 
+        describe('convertArgumentsToArray', function() {
+            it('should return an array given arguments', function() {
+                var actual;
+                (function() {
+                    actual = mockito4js.util.array.convertArgumentsToArray(arguments);
+                })('argumentOne', 'argumentTwo');
+
+                expect(actual instanceof Array).toBe(true);
+            });
+        });
+
         describe('valuesMatch', function() {
             it('should return true given actual value equals expected value', function() {
                 var element = {key: 'value'};
