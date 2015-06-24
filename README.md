@@ -79,7 +79,7 @@ mockito4js.verify(functionSpy, mockito4js.atLeast(1)).wasCalled();
 mockito4js.verify(functionSpy, mockito4js.atLeast(1)).wasCalledWith("argument");;
 ```
 
-When passing no verifier to mockito4js.verify() then mockito4js.once() will be used by default.
+When passing no verifier to mockito4js.verify() then **mockito4js.once()** will be used **by default**.
 ```js
 spy.functionOne();
 mockito4js.verify(object).functionOne() // => No error
