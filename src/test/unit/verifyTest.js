@@ -18,26 +18,26 @@ describe('Verify module', function() {
     });
 
     describe('verify', function() {
-        it('should throw an error given verifier is undefined', function() {
-            expect(function() {
-                mockito4js.verify(object).functionOne('argumentOne');
-            }).toThrow(new Error('No verifier passed to verify method. Use one of the following verifiers:\n' +
-            'mockito4js.never()\n' +
-            'mockito4js.once()\n' +
-            'mockito4js.times()\n' +
-            'mockito4js.atLeast()\n' +
-            'mockito4js.atMost()\n'));
+        it('should use once verifier given verifier is undefined', function() {
+            var verifierSpy = mockito4js.spy(mockito4js.once());
+            mockito4js.spy(mockito4js);
+            mockito4js.doReturn(verifierSpy).when(mockito4js).once();
+
+            object.functionOne('argumentOne');
+            mockito4js.verify(object).functionOne('argumentOne');
+
+            mockito4js.verify(verifierSpy, mockito4js.times(1)).verify();
         });
 
         it('should throw throw an error given verifier is null', function() {
-            expect(function() {
-                mockito4js.verify(object, null).functionOne('argumentOne');
-            }).toThrow(new Error('No verifier passed to verify method. Use one of the following verifiers:\n' +
-            'mockito4js.never()\n' +
-            'mockito4js.once()\n' +
-            'mockito4js.times()\n' +
-            'mockito4js.atLeast()\n' +
-            'mockito4js.atMost()\n'));
+            var verifierSpy = mockito4js.spy(mockito4js.once());
+            mockito4js.spy(mockito4js);
+            mockito4js.doReturn(verifierSpy).when(mockito4js).once();
+
+            object.functionOne('argumentOne');
+            mockito4js.verify(object).functionOne('argumentOne');
+
+            mockito4js.verify(verifierSpy, mockito4js.times(1)).verify();
         });
 
         it('should throw an error when number of invocations is not correct', function () {
