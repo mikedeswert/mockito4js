@@ -71,12 +71,18 @@ If arguments are passed to **functionToVerify**, then only invocations with thos
 Verify throws an error when its conditions are not satisfied and thus fails the test it is used in.
 
 ```js
-mockito4js.verify(objectSpy, mockito4js.once()).functionToVerify("argument");
+mockito4js.verify(objectSpy, mockito4js.atLeast(1)).functionToVerify("argument");
 ```
 
 ```js
-mockito4js.verify(functionSpy, mockito4js.once()).wasCalled();  
-mockito4js.verify(functionSpy, mockito4js.once()).wasCalledWith("argument");;
+mockito4js.verify(functionSpy, mockito4js.atLeast(1)).wasCalled();  
+mockito4js.verify(functionSpy, mockito4js.atLeast(1)).wasCalledWith("argument");;
+```
+
+When passing no verifier to mockito4js.verify() then mockito4js.once() will be used by default.
+```js
+spy.functionOne();
+mockito4js.verify(object).functionOne() // => No error
 ```
 
 #### verifiers
