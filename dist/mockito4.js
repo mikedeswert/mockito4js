@@ -514,12 +514,7 @@ getMockito4jsBuilder().Util = function(mockito4js) {
 getMockito4jsBuilder().Verify = function (mockito4js) {
     mockito4js.verify = function (spy, verification) {
         if(verification == undefined || verification == null) {
-            throw new Error('No verifier passed to verify method. Use one of the following verifiers:\n' +
-                            'mockito4js.never()\n' +
-                            'mockito4js.once()\n' +
-                            'mockito4js.times()\n' +
-                            'mockito4js.atLeast()\n' +
-                            'mockito4js.atMost()\n')
+            verification = mockito4js.once();
         }
 
         if (!spy.isSpy) {
