@@ -109,7 +109,7 @@ Any can be used when you don't care about the specific value of an argument but 
 It can be used either with the **mockito4js.verify()** or the **"doMethods"**.
 
 ```js
-mockito4js.verify(spy, mockito4js.once()).functionToVerify(mockito4js.any(String));
+mockito4js.verify(spy).functionToVerify(mockito4js.any(String));
 
 mockito4js.doReturn("return value").when(spy).functionToMock(mockito4js.any('string'));
 ```
@@ -117,16 +117,16 @@ mockito4js.doReturn("return value").when(spy).functionToMock(mockito4js.any('str
 *Examples:*
 ```js
 spy.someFunction(new String('string'));  
-mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any(String)); // => No error
+mockito4js.verify(spy).someFunction(mockito4js.any(String)); // => No error
 
 spy.someFunction('string');  
-mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any(String)); // => Error
+mockito4js.verify(spy).someFunction(mockito4js.any(String)); // => Error
    
 spy.someFunction(new String('string'));  
-mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any('string')); // => Error
+mockito4js.verify(spy).someFunction(mockito4js.any('string')); // => Error
    
 spy.someFunction('string');  
-mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.any('string')); // => No Error
+mockito4js.verify(spy).someFunction(mockito4js.any('string')); // => No Error
 ```
 
 ### eq
@@ -135,7 +135,7 @@ Eq can be used when you want to compare arguments by value and not by reference.
 It can be used either with the **mockito4js.verify()** or the **"doMethods"**.
 
 ```js
-mockito4js.verify(spy, mockito4js.once()).functionToVerify(mockito4js.eq("argument"));
+mockito4js.verify(spy).functionToVerify(mockito4js.eq("argument"));
 
 mockito4js.doReturn("return value").when(spy).functionToMock(mockito4js.eq("argument"));
 ```
@@ -144,24 +144,24 @@ mockito4js.doReturn("return value").when(spy).functionToMock(mockito4js.eq("argu
 ```js   
 // Objects  
 spy.someFunction({key: 'value'});  
-mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq({key:'value'})); // => No error
+mockito4js.verify(spy).someFunction(mockito4js.eq({key:'value'})); // => No error
    
 spy.someFunction({key: 'value'});  
-mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq({key: 'other value'})); // => Error
+mockito4js.verify(spy).someFunction(mockito4js.eq({key: 'other value'})); // => Error
 
 // Arrays  
 spy.someFunction(['value']);  
-mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(['value'])); // => No error
+mockito4js.verify(spy).someFunction(mockito4js.eq(['value'])); // => No error
    
 spy.someFunction(['value']);  
-mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(['other value'])); // => Error
+mockito4js.verify(spy).someFunction(mockito4js.eq(['other value'])); // => Error
    
 // Functions  
 spy.someFunction(function() { return true; });  
-mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(function() { return true; })); // => No error
+mockito4js.verify(spy).someFunction(mockito4js.eq(function() { return true; })); // => No error
    
 spy.someFunction(function() { return true; });  
-mockito4js.verify(spy, mockito4js.once()).someFunction(mockito4js.eq(function() { return false; })); // => Error
+mockito4js.verify(spy).someFunction(mockito4js.eq(function() { return false; })); // => Error
 ```
 
 ### Argument Captors
@@ -174,7 +174,7 @@ The **getValue()** of the argument captor will always return the last value it c
 ```js
 // Verify
 var argumentCaptor = mockito4js.createArgumentCaptor();
-mockito4js.verify(spy, mockito4js.once()).functionToVerify(argumentCaptor);
+mockito4js.verify(spy).functionToVerify(argumentCaptor);
 
 spy.functionToVerify("argument of verify");
 alert(argumentCaptor.getValue()) // => "argument of verify"
