@@ -266,12 +266,7 @@ getMockito4jsBuilder().Do = function(mockito4js) {
             return mockito4js.util.functionFactory.createMockFunction(
                 argumentsToVerify,
                 fn.execution,
-                mockito4js.util.functionFactory.createInvocationCountingFunction({
-                    target: fn,
-                    source: fn,
-                    property: 'self',
-                    functionToReplace: execution
-                })
+                execution
             );
         }
     };

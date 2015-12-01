@@ -176,6 +176,22 @@ describe('Do module', function () {
 
                 expect(actual).toBe('return value');
             });
+
+            it('should push the arguments only once to the invocation array when using isCalled', function () {
+                mockito4js.doNothing().when(fn).isCalled();
+
+                fn();
+
+                mockito4js.verify(fn).wasCalled();
+            });
+
+            it('should push the arguments only once to the invocation array when using isCalledWith', function () {
+                mockito4js.doNothing().when(fn).isCalledWith('argument');
+
+                fn('argument');
+
+                mockito4js.verify(fn).wasCalledWith('argument');
+            });
         });
 
         it('should throw error given argument passed to when is not a spy', function() {
