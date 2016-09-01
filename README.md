@@ -100,7 +100,7 @@ mockito4js.atLeast(1);
 // verifies that the number of invocations is equal to or greater than the expected amount
 
 mockito4js.atMost(2);
-// verifies that number of invocations is equal to or less than the expected amount
+// verifies that the number of invocations is equal to or less than the expected amount
 ```
 
 ### any
